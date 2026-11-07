@@ -76,7 +76,7 @@ class WebsiteTests(unittest.TestCase):
 
     def test_workspace_has_transparent_model_disclosure(self):
         self.assertIn("not a trained neural language model", self.js.lower())
-        self.assertIn("not a trained AI model", self.html.lower())
+        self.assertIn("not a trained neural language model", self.html.lower())
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
