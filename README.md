@@ -2,32 +2,43 @@
 
 <div align="center">
 
-**A responsive, local-first AI workspace — built without Gemini, GPT, or external AI APIs.**
+**A polished, responsive local-first AI workspace for conversations, knowledge and documents.**
 
 [🌐 Open Tamanna AI Website](https://tamanna456760-it.github.io/tamanna-website/)
 
-[View source code](https://github.com/tamanna456760-it/tamanna-website) · [Deployment status](https://github.com/tamanna456760-it/tamanna-website/actions)
+[Source code](https://github.com/tamanna456760-it/tamanna-website) · [GitHub Actions](https://github.com/tamanna456760-it/tamanna-website/actions)
 
 </div>
 
-> **Website preview:** Use the **Open Tamanna AI Website** link above to launch the interactive website. GitHub README pages cannot embed a fully working website inside the Markdown document; this prominent link opens the actual site.
+> GitHub README pages cannot run an interactive website inline. Use the website link above to open the complete experience. The live link becomes available after GitHub Pages deployment succeeds.
 
-## Features
+## Website features
 
-- Responsive AI chat interface and navigation
-- Seven-color theme: violet, blue, cyan, green, gold, pink and orange
-- Dark and light appearance
-- Local curated knowledge search (no cloud AI API)
-- Browser conversation memory using `localStorage`
-- Knowledge library and activity/settings views
-- Import TXT, Markdown, JSON and CSV documents locally (up to 2 MB per file); imported text is available to chat search for the current browser session
-- Automated website tests and GitHub Pages deployment workflow
+- **Professional workspace UI:** responsive sidebar, navigation, chat composer and clean content views
+- **Chat:** local question search, starter prompts, conversation interface and new-chat action
+- **Conversations:** locally saved chat history, recent chat shortcuts and conversation search
+- **Knowledge base:** built-in reference library, searchable entries and source labels
+- **My documents:** import TXT, Markdown, JSON and CSV files (up to 500 KB each, 10 per session); imported text is searchable in chat
+- **Activity:** transparent local workspace event list and basic system overview
+- **Settings:** seven accent colors (violet, blue, cyan, green, gold, pink and orange), dark/light mode, compact sidebar, local workspace name, memory toggle
+- **Data tools:** export saved conversations and preferences as JSON, or reset local data
+- **Mobile support:** responsive layout, mobile navigation and touch-friendly controls
+- **Accessibility basics:** semantic sections, visible labels, keyboard focus and reduced-motion support
+- **No external AI APIs:** no Gemini, GPT or cloud AI API calls
 
-## Important AI model note
+## Important model disclosure
 
-This website does **not** contain a newly trained general-purpose AI model. Its current response engine searches a small curated local knowledge set and any documents imported during the current browser session. It does not use Gemini, GPT, or another external AI API.
+This website does **not** contain a newly trained general-purpose AI model. Its current response engine performs keyword-based retrieval over a small curated knowledge library and documents imported during the current browser session. It returns relevant stored text when it finds a match; it does not provide general-purpose reasoning or generate original answers like a trained language model.
 
-A genuinely independent local AI model requires model weights, a compatible inference runtime and suitable hardware. Training or fine-tuning also requires a prepared dataset and compute resources.
+A genuinely independent local AI model requires open model weights, a compatible inference runtime and suitable hardware. Training or fine-tuning additionally requires a prepared dataset and compute resources.
+
+## Privacy and limitations
+
+- Saved conversations and preferences are stored in this browser using `localStorage`; they are not synced to a server.
+- Imported document text is processed locally and held in memory for the current page session. Refreshing or closing the page clears imported documents.
+- This static website does not provide online user accounts, server-side authentication, encrypted cloud storage or multi-device synchronization.
+- Do not enter passwords, API keys or sensitive personal information.
+- Local browser storage is not a substitute for a secure encrypted database.
 
 ## Run locally
 
@@ -41,27 +52,20 @@ No package installation is required.
 
 The repository includes a GitHub Actions workflow at `.github/workflows/pages.yml`.
 
-1. Open **Settings → Pages** in this repository.
-2. Set the source to **GitHub Actions**.
-3. Push to `main`, or manually run the workflow from **Actions**.
-4. After a successful deployment, open: https://tamanna456760-it.github.io/tamanna-website/
+1. Open [Repository Pages settings](https://github.com/tamanna456760-it/tamanna-website/settings/pages).
+2. Set **Build and deployment → Source** to **GitHub Actions** if the setting is available.
+3. Push to `main`, or manually run the workflow from [Actions](https://github.com/tamanna456760-it/tamanna-website/actions).
+4. Wait for both the build and deploy jobs to succeed.
+5. Open: https://tamanna456760-it.github.io/tamanna-website/
 
-If the preview link does not open yet, check the Actions deployment status and the repository's Pages settings. A successful build alone does not mean the website has been published.
-
-## Privacy and limitations
-
-- No account system, backend authentication or shared server database is included.
-- Conversation memory is stored in this browser when enabled.
-- Imported documents are read locally in the browser and are not uploaded; they are cleared when the page session is refreshed.
-- Do not enter passwords, API keys or sensitive personal information.
-- A static website cannot securely provide server-side accounts or a shared database.
+A successful build alone does not mean the website is published. GitHub Pages must be enabled for the repository and the deploy job must finish successfully.
 
 ## Project structure
 
-- `index.html` — website structure and views
-- `styles.css` — responsive design and themes
-- `app.js` — local chat, knowledge retrieval, document import, navigation and memory
+- `index.html` — complete website structure and workspace views
+- `styles.css` — responsive professional design, themes and seven-color palette
+- `app.js` — local chat retrieval, conversation history, document import, navigation and settings
 - `tests/test_website.py` — automated website checks
-- `.github/workflows/pages.yml` — build, test and Pages deployment
+- `.github/workflows/pages.yml` — validation and GitHub Pages deployment
 
 **Owner:** HM INSAN ALI
