@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090b18">
+  <meta name="description" content="Tamanna AI — a private, local-first assistant powered by your own knowledge base.">
+  <title>Tamanna AI — Your space to think</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='28' fill='%237c5cff'/%3E%3Ctext x='50' y='66' font-size='48' text-anchor='middle' fill='white' font-family='Arial'%3ET%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="Tamanna AI home">
+        <span class="brand-mark">T<span>✦</span></span>
+        <span class="brand-copy"><strong>Tamanna</strong><small>YOUR AI SPACE</small></span>
+      </a>
+      <button class="new-chat" id="newChat"><span>＋</span> New conversation</button>
+      <div class="side-label">WORKSPACE</div>
+      <nav class="nav-list" aria-label="Main navigation">
+        <button class="nav-item active" data-view="chat"><span class="nav-icon">◈</span> AI Chat <kbd>⌘ 1</kbd></button>
+        <button class="nav-item" data-view="knowledge"><span class="nav-icon">▤</span> Knowledge base</button>
+        <button class="nav-item" data-view="memory"><span class="nav-icon">◉</span> Memory</button>
+        <button class="nav-item" data-view="files"><span class="nav-icon">▧</span> Your files</button>
+      </nav>
+      <div class="side-label tools-label">SYSTEM</div>
+      <nav class="nav-list">
+        <button class="nav-item" data-view="activity"><span class="nav-icon">⌁</span> Activity</button>
+        <button class="nav-item" data-view="settings"><span class="nav-icon">⚙</span> Settings</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="local-card"><span class="status-dot"></span><div><strong>Local mode active</strong><small>No cloud AI connection</small></div><span class="lock">⌑</span></div>
+        <div class="profile"><div class="avatar">T</div><div><strong>Guest workspace</strong><small>Private on this device</small></div><button class="more" aria-label="Profile options">•••</button></div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu" id="menuToggle" aria-label="Open menu">☰</button>
+        <div class="breadcrumb">Workspace <span>/</span> <strong id="pageName">AI Chat</strong></div>
+        <div class="top-actions"><span class="top-status"><i></i> LOCAL ENGINE</span><button class="icon-button" id="themeToggle" aria-label="Toggle appearance">◐</button><button class="help-button" id="aboutButton">About</button></div>
+      </header>
+
+      <section class="view active-view" id="chatView">
+        <div class="chat-wrap">
+          <div class="welcome">
+            <div class="orb"><span>✦</span><i class="orb-dot dot-one"></i><i class="orb-dot dot-two"></i><i class="orb-dot dot-three"></i></div>
+            <div class="eyebrow"><span></span> A MORE PERSONAL WAY TO THINK</div>
+            <h1>Good ideas start<br>with <em>“what if?”</em></h1>
+            <p class="welcome-copy">I'm Tamanna — your private workspace assistant.<br>Ask a question, explore an idea, or search my local knowledge.</p>
+          </div>
+          <div class="suggestions" id="suggestions">
+            <button class="suggestion" data-prompt="What can Tamanna AI do?"><span class="suggestion-icon violet">✧</span><span><strong>Explore Tamanna</strong><small>See what this workspace can do</small></span><b>↗</b></button>
+            <button class="suggestion" data-prompt="How does the local knowledge base work?"><span class="suggestion-icon cyan">⌕</span><span><strong>Search knowledge</strong><small>Find answers from local notes</small></span><b>↗</b></button>
+            <button class="suggestion" data-prompt="Give me a simple project plan."><span class="suggestion-icon gold">⌘</span><span><strong>Plan something</strong><small>Turn an idea into clear steps</small></span><b>↗</b></button>
+            <button class="suggestion" data-prompt="How is my privacy protected in local mode?"><span class="suggestion-icon pink">◇</span><span><strong>Privacy first</strong><small>Understand local-only mode</small></span><b>↗</b></button>
+          </div>
+          <div class="messages" id="messages" aria-live="polite"></div>
+          <form class="composer" id="chatForm">
+            <label class="sr-only" for="messageInput">Message Tamanna AI</label>
+            <textarea id="messageInput" rows="1" placeholder="Message Tamanna..." required></textarea>
+            <div class="composer-footer"><div class="composer-hint"><span>＋</span> <span>Local knowledge search</span><span class="hint-separator">·</span><span>Private session</span></div><button class="send-button" type="submit" aria-label="Send message">↑</button></div>
+          </form>
+          <p class="disclaimer">Tamanna uses a small local knowledge base in this demo. It can make mistakes; no cloud AI is connected.</p>
+        </div>
+      </section>
+
+      <section class="view" id="knowledgeView">
+        <div class="page-content"><div class="page-heading"><div><div class="eyebrow">YOUR PRIVATE LIBRARY</div><h2>Knowledge base<span class="heading-spark">✦</span></h2><p>Information stored with this website, ready for local search.</p></div><span class="count-pill" id="knowledgeCount">0 entries</span></div><div class="knowledge-grid" id="knowledgeGrid"></div><div class="info-banner"><span>✧</span><div><strong>Your knowledge stays in this project.</strong><p>This starter uses a bundled sample library. You can expand it with your own verified documents and facts.</p></div></div></div>
+      </section>
+
+      <section class="view" id="memoryView">
+        <div class="page-content"><div class="page-heading"><div><div class="eyebrow">ON THIS DEVICE</div><h2>Memory</h2><p>Saved conversation history for this browser.</p></div><span class="count-pill" id="memoryCount">0 messages</span></div><div class="panel"><div class="panel-title"><div><strong>Recent conversation</strong><small>Stored locally in your browser</small></div><button class="subtle-button" id="clearMemory">Clear memory</button></div><div id="memoryList" class="memory-list"><p class="empty-state">No saved conversations yet. Start chatting to build local history.</p></div></div><p class="muted-note">Clearing browser data may also remove this memory. This is not a synced account or encrypted server database.</p></div>
+      </section>
+
+      <section class="view" id="filesView">
+        <div class="page-content"><div class="page-heading"><div><div class="eyebrow">WORKSPACE STORAGE</div><h2>Your files</h2><p>A starting point for a private document workspace.</p></div></div><div class="empty-panel"><div class="empty-icon">▧</div><h3>File workspace is ready to grow</h3><p>File upload, indexing and document previews are not enabled in this first version. Add them with safe file validation before storing user uploads.</p></div></div>
+      </section>
+
+      <section class="view" id="activityView">
+        <div class="page-content"><div class="page-heading"><div><div class="eyebrow">SYSTEM OVERVIEW</div><h2>Activity</h2><p>A transparent look at what this demo is doing.</p></div><span class="live-pill"><i></i> Running in browser</span></div><div class="stats-grid"><div class="stat-card"><span>AI provider</span><strong>None</strong><small>External API not configured</small></div><div class="stat-card"><span>Knowledge source</span><strong>Local</strong><small>Bundled sample entries</small></div><div class="stat-card"><span>Conversation storage</span><strong>Browser</strong><small>localStorage on this device</small></div></div><div class="panel activity-panel"><div class="panel-title"><div><strong>System events</strong><small>Current session</small></div></div><div class="event-row"><i class="event-green"></i><div><strong>Local interface loaded</strong><small>No remote AI service was called</small></div><time>Now</time></div><div class="event-row"><i class="event-purple"></i><div><strong>Knowledge search available</strong><small>Keyword matching over bundled entries</small></div><time>Ready</time></div></div></div>
+      </section>
+
+      <section class="view" id="settingsView">
+        <div class="page-content"><div class="page-heading"><div><div class="eyebrow">MAKE IT YOURS</div><h2>Settings</h2><p>Control the look and local behavior of this workspace.</p></div></div><div class="panel settings-panel"><div class="setting-row"><div><strong>Appearance</strong><small>Switch between dark and light workspace</small></div><button class="subtle-button" id="settingsTheme">Toggle theme</button></div><div class="setting-row"><div><strong>Local conversation memory</strong><small>Save chat history in this browser only</small></div><label class="switch"><input type="checkbox" id="memorySetting" checked><span></span></label></div><div class="setting-row"><div><strong>Knowledge search</strong><small>Use bundled local entries to find relevant answers</small></div><span class="enabled-label">Enabled</span></div><div class="setting-row"><div><strong>External AI providers</strong><small>Gemini, GPT and other cloud model connections</small></div><span class="disabled-label">Not connected</span></div></div><div class="color-panel"><strong>Seven-color identity</strong><p>Violet · Blue · Cyan · Green · Gold · Pink · Orange</p><div class="color-dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <dialog id="aboutDialog"><div class="dialog-inner"><button class="dialog-close" id="closeDialog" aria-label="Close">×</button><div class="brand-mark dialog-mark">T<span>✦</span></div><h2>About Tamanna AI</h2><p>This is the first local-first website build. It does not use Gemini, GPT, or a remote AI API. Replies come from a small curated knowledge set and simple local matching — not a trained general-purpose AI model.</p><button class="primary-button" id="dialogOk">Got it</button></div></dialog>
+</body>
+</html>
