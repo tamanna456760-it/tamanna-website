@@ -13,6 +13,7 @@ const messagesEl = $("#messages");
 const input = $("#messageInput");
 const views = ["chat","knowledge","memory","files","activity","settings"];
 let history = [];
+const uploadedDocs = [];
 let saveMemory = localStorage.getItem("tamanna-save-memory") !== "false";
 
 function escapeHtml(value) {
@@ -40,7 +41,7 @@ function words(text) {
 }
 function answerQuestion(question) {
   const query = words(question);
-  const ranked = knowledge.map(item => {
+  const ranked = [...knowledge, ...uploadedDocs].map(item => {
     const haystack = words(item.title+" "+item.category+" "+item.body);
     const unique = new Set(haystack);
     const score = query.reduce((sum, word) => sum + (unique.has(word) ? (item.title.toLowerCase().includes(word) ? 3 : 1) : 0), 0);
@@ -68,8 +69,8 @@ function navigate(view) {
   if(view==="memory") updateMemory();
 }
 function renderKnowledge() {
-  $("#knowledgeCount").textContent = knowledge.length+" entries";
-  $("#knowledgeGrid").innerHTML = knowledge.map(item=>'<article class="knowledge-card"><div class="knowledge-symbol">✧</div><div><h3>'+escapeHtml(item.title)+'</h3><p>'+escapeHtml(item.body)+'</p></div></article>').join("");
+  $("#knowledgeCount").textContent = (knowledge.length+uploadedDocs.length)+" entries";
+  $("#knowledgeGrid").innerHTML = [...knowledge,...uploadedDocs].map(item=>'<article class="knowledge-card"><div class="knowledge-symbol">✧</div><div><h3>'+escapeHtml(item.title)+'</h3><p>'+escapeHtml(item.body)+'</p></div></article>').join("");
 }
 function updateMemory() {
   $("#memoryCount").textContent = history.length+" messages";
@@ -77,6 +78,36 @@ function updateMemory() {
   if (!history.length) { list.innerHTML='<p class="empty-state">No saved conversations yet. Start chatting to build local history.</p>'; return; }
   list.innerHTML = history.slice().reverse().slice(0,12).map(item=>'<div class="memory-item">'+escapeHtml(item.text)+'<small>'+escapeHtml(item.role)+' · '+new Date(item.at).toLocaleString()+'</small></div>').join("");
 }
+
+function renderFiles() {
+  const list = $("#fileList");
+  if (!uploadedDocs.length) { list.innerHTML='<p class="empty-state">No documents imported in this session.</p>'; return; }
+  list.innerHTML = uploadedDocs.map((doc,index)=>'<div class="file-row"><span class="file-badge">▤</span><div><strong>'+escapeHtml(doc.title)+'</strong><small>'+doc.size+' · Available in local chat search</small></div><button class="subtle-button" data-remove-file="'+index+'" type="button">Remove</button></div>').join("");
+  list.querySelectorAll("[data-remove-file]").forEach(button=>button.addEventListener("click",()=>{
+    uploadedDocs.splice(Number(button.dataset.removeFile),1); renderFiles(); renderKnowledge();
+    showToast("Document removed from this session");
+  }));
+}
+$("#fileInput").addEventListener("change", async event => {
+  const files = Array.from(event.target.files || []);
+  for (const file of files) {
+    const extension = file.name.split(".").pop().toLowerCase();
+    if (!["txt","md","json","csv"].includes(extension)) { showToast("Unsupported file type: "+file.name); continue; }
+    if (file.size > 2 * 1024 * 1024) { showToast("File is larger than 2 MB: "+file.name); continue; }
+    try {
+      const body = await file.text();
+      if (!body.trim()) { showToast("Skipped empty file: "+file.name); continue; }
+      const title = file.name.replace(/\.[^.]+$/, "");
+      const existing = uploadedDocs.findIndex(doc=>doc.title===title);
+      const entry = {title,category:"Uploaded document",color:"blue",body,size:(file.size/1024).toFixed(1)+" KB"};
+      if(existing>=0) uploadedDocs[existing]=entry; else uploadedDocs.push(entry);
+    } catch { showToast("Could not read: "+file.name); }
+  }
+  event.target.value="";
+  renderFiles(); renderKnowledge();
+  if(uploadedDocs.length) showToast("Local documents ready for chat search");
+});
+
 function loadHistory() {
   try { history = saveMemory ? JSON.parse(localStorage.getItem("tamanna-chat-history") || "[]") : []; if(!Array.isArray(history)) history=[]; }
   catch { history=[]; }
