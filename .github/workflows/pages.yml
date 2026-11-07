@@ -26,6 +26,10 @@ jobs:
           test -s styles.css
           test -s app.js
           echo "Tamanna website files are present."
+      - name: Check JavaScript syntax
+        run: node --check app.js
+      - name: Run website tests
+        run: python -m unittest discover -s tests -v
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
