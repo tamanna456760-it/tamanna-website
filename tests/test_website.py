@@ -54,6 +54,13 @@ class WebsiteTests(unittest.TestCase):
             with self.subTest(element_id=element_id):
                 self.assertIn(element_id, parser.ids)
 
+    def test_uses_one_consistent_branded_favicon(self):
+        parser = WebsiteHTMLParser()
+        parser.feed(self.html)
+        icon_links = [line for line in self.html.splitlines() if 'rel="icon"' in line]
+        self.assertEqual(len(icon_links), 1)
+        self.assertIn('href="assets/tamanna-icon.svg"', icon_links[0])
+
     def test_seven_color_palette_and_responsive_layout(self):
         parser = WebsiteHTMLParser()
         parser.feed(self.html)
