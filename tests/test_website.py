@@ -28,7 +28,7 @@ class WebsiteTests(unittest.TestCase):
         self.js = (ROOT / "app.js").read_text(encoding="utf-8")
 
     def test_required_website_files_exist(self):
-        for name in ("index.html", "styles.css", "app.js", "README.md"):
+        for name in ("index.html", "styles.css", "app.js", "pwa.js", "sw.js", "manifest.webmanifest", "404.html", "README.md", "assets/tamanna-icon.svg"):
             with self.subTest(name=name):
                 self.assertTrue((ROOT / name).is_file())
                 self.assertGreater((ROOT / name).stat().st_size, 0)
@@ -38,6 +38,7 @@ class WebsiteTests(unittest.TestCase):
         parser.feed(self.html)
         self.assertIn("styles.css", parser.assets)
         self.assertIn("app.js", parser.assets)
+        self.assertIn("pwa.js", parser.assets)
         for asset in parser.assets:
             self.assertTrue((ROOT / asset).is_file(), asset)
 
@@ -73,6 +74,12 @@ class WebsiteTests(unittest.TestCase):
         self.assertIn("function importFiles", self.js)
         self.assertGreaterEqual(self.js.count('{title:"'), 8)
         self.assertIn("localStorage", self.js)
+
+    def test_installable_offline_pwa_assets(self):
+        self.assertIn('rel="manifest"', self.html)
+        self.assertIn("serviceWorker.register", (ROOT / "pwa.js").read_text(encoding="utf-8"))
+        self.assertIn("addAll(APP_SHELL)", (ROOT / "sw.js").read_text(encoding="utf-8"))
+        self.assertIn("tamanna-icon.svg", (ROOT / "manifest.webmanifest").read_text(encoding="utf-8"))
 
     def test_workspace_has_transparent_model_disclosure(self):
         self.assertIn("not a trained neural language model", self.js.lower())
