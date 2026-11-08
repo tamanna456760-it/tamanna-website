@@ -1,0 +1,18 @@
+{
+  "name": "Tamanna AI",
+  "short_name": "Tamanna",
+  "description": "A private, local-first AI workspace for conversations and knowledge.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090b18",
+  "theme_color": "#090b18",
+  "icons": [
+    {
+      "src": "assets/tamanna-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
