@@ -85,5 +85,13 @@ class WebsiteTests(unittest.TestCase):
         self.assertIn("not a trained neural language model", self.js.lower())
         self.assertIn("not a trained neural language model", self.html.lower())
 
+    def test_service_worker_prefers_fresh_assets_and_keeps_offline_fallback(self):
+        worker = (ROOT / "sw.js").read_text(encoding="utf-8")
+        self.assertIn("tamanna-ai-shell-v2", worker)
+        self.assertIn("fetch(request).then(response =>", worker)
+        self.assertIn("cache.put(request, copy)", worker)
+        self.assertIn("caches.match(request)", worker)
+        self.assertIn('request.mode === "navigate"', worker)
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
