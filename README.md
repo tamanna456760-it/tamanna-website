@@ -24,6 +24,10 @@
 - **Data tools:** export saved conversations and preferences as JSON, or reset local data
 - **Mobile support:** responsive layout, mobile navigation and touch-friendly controls
 - **Accessibility basics:** semantic sections, visible labels, keyboard focus and reduced-motion support
+- **Installable PWA:** add Tamanna to a supported device's home screen
+- **Offline shell:** previously cached app files can load without a network connection
+- **Custom branding:** matching SVG app icon and browser icon
+- **Friendly 404 page:** a branded route back to the workspace
 - **No external AI APIs:** no Gemini, GPT or cloud AI API calls
 
 ## Important model disclosure
@@ -66,6 +70,10 @@ A successful build alone does not mean the website is published. GitHub Pages mu
 - `styles.css` — responsive professional design, themes and seven-color palette
 - `app.js` — local chat retrieval, conversation history, document import, navigation and settings
 - `tests/test_website.py` — automated website checks
+- `manifest.webmanifest` — installable app metadata
+- `pwa.js` / `sw.js` — service-worker registration and offline app shell
+- `assets/tamanna-icon.svg` — app icon
+- `404.html` — branded not-found page
 - `.github/workflows/pages.yml` — validation and GitHub Pages deployment
 
 **Owner:** HM INSAN ALI
