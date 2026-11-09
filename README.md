@@ -1,40 +1,11 @@
 # Tamanna AI Website
 
-<div align="center">
+[🌐 Open Tamanna AI Chat](https://tamanna456760-it.github.io/tamanna-website/) · [🛡️ Open Tamanna Admin](https://tamanna456760-it.github.io/tamanna-website/admin/)
 
-**Tamanna AI — Chat Panel + Admin Control Center**
+The previous standalone workspace homepage has been replaced with the Chat Panel from [Tamanna-](https://github.com/tamanna456760-it/Tamanna-). The Admin Control Center is available at `/admin/`. The official logo already used by this website repository is retained.
 
-[🌐 Open Tamanna AI Chat](https://tamanna456760-it.github.io/tamanna-website/)
+The Bengali Chat Panel includes account UI, settings and chat composer. Its frontend uses FastAPI `POST /api/chat`, `GET /api/history`, and `/api/auth/*`. The Admin panel uses `GET /api/admin/overview` and `POST /api/auth/logout`. No Gemini, GPT or hosted model API is used.
 
-[🛡️ Open Tamanna Admin](https://tamanna456760-it.github.io/tamanna-website/admin/)
-
-[Source repository](https://github.com/tamanna456760-it/Tamanna-) · [Website repository](https://github.com/tamanna456760-it/tamanna-website) · [GitHub Actions](https://github.com/tamanna456760-it/tamanna-website/actions)
-
-</div>
-
-## Imported panels
-
-The previous standalone workspace homepage has been replaced with the Tamanna AI chat panel from the `Tamanna-` repository. The Admin Control Center is published at `/admin/`.
-
-- User Chat: Bengali chat interface, sign-in/sign-up panel, preferences and chat composer.
-- Admin Control Center: admin overview, access state, backend/model/database status and management module overview.
-- The existing official Tamanna AI logo from this website repository is retained.
-- Responsive styles, account/settings scripts, memory/knowledge/model health UI and PWA shell are included.
-- Chat frontend uses FastAPI `POST /api/chat`, `GET /api/history`, and `/api/auth/*`.
-- Admin frontend uses `GET /api/admin/overview` and `POST /api/auth/logout`.
-- No Gemini, GPT, or hosted model API is used.
-
-## GitHub Pages limitation
-
-GitHub Pages is static hosting. The Chat and Admin panels load as website interfaces, but real account login, live AI generation, chat persistence and live admin data require the FastAPI backend to be deployed and connected on the same origin. On GitHub Pages without that backend, the Admin panel explicitly shows Preview Mode and login/chat API calls are unavailable. No fake authentication or fabricated live statistics are shown.
-
-The backend uses local Ollama for inference. GitHub Pages does not run Python or Ollama.
-
-## Deployment
-
-GitHub Actions validates assets and JavaScript, runs website tests, then deploys to GitHub Pages.
-
-- Chat: https://tamanna456760-it.github.io/tamanna-website/
-- Admin: https://tamanna456760-it.github.io/tamanna-website/admin/
+**GitHub Pages is static hosting.** The panels display on Pages, but real login, live AI responses, persistent chat and live admin data require the FastAPI backend on the same origin. Without that backend the Admin panel shows Preview Mode; it does not fake admin access or statistics. The backend uses local Ollama.
 
 **Owner:** HM INSAN ALI

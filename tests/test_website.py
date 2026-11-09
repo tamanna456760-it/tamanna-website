@@ -24,19 +24,20 @@ class WebsiteTests(unittest.TestCase):
    self.assertTrue((ROOT/x.split("?",1)[0]).is_file(),x)
   for x in ("css/style.css","css/settings.css","css/auth.css","css/admin.css","js/auth.js","js/chat.js","js/admin.js","js/settings.js","js/memories.js","js/knowledge.js","js/model-health.js","assets/tamanna-ai-official-logo.jpg","manifest.webmanifest"):
    self.assertTrue((ROOT/x).is_file(),x)
- def test_pages_paths_relative(self):
+ def test_relative_paths(self):
   for p in (self.html,self.admin):
    self.assertNotIn('href="/assets/',p);self.assertNotIn('src="/js/',p);self.assertNotIn('href="/css/',p)
- def test_chat_matches_fastapi(self):
-  js=(ROOT/"js/chat.js").read_text();self.assertIn('"/api/chat"',js);self.assertIn('JSON.stringify({message:prompt})',js.replace(" ",""));self.assertIn('"/api/history"',js);self.assertNotIn("/tamanna-ai",js)
+ def test_fastapi_chat_contract(self):
+  js=(ROOT/"js/chat.js").read_text().replace(" ","")
+  self.assertIn('"/api/chat"',js);self.assertIn('JSON.stringify({message:prompt})',js);self.assertIn('"/api/history"',js);self.assertNotIn("/tamanna-ai",js)
  def test_no_hosted_model_api(self):
   text=(self.html+(ROOT/"js/chat.js").read_text()).lower()
   self.assertNotIn("generativelanguage.googleapis.com",text);self.assertNotIn("api.openai.com",text)
  def test_seven_color_palette(self):
   css=(ROOT/"css/settings.css").read_text()
   for x in ("violet","blue","teal","green","gold","pink","orange"):self.assertIn(x,css)
- def test_admin_preview_does_not_fake_access(self):
+ def test_admin_preview_safe(self):
   js=(ROOT/"js/admin.js").read_text();self.assertIn("/api/admin/overview",js);self.assertIn("setPreview",js);self.assertIn("Access denied",js)
- def test_pwa_shell_updated(self):
+ def test_pwa_shell(self):
   sw=(ROOT/"sw.js").read_text();self.assertIn("tamanna-ai-shell-v3",sw);self.assertIn("./admin/",sw);self.assertNotIn("./app.js",sw)
 if __name__=="__main__":unittest.main(verbosity=2)

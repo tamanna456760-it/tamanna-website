@@ -1,111 +1,237 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090b18">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Tamanna AI">
-  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="Tamanna AI — personal AI chat assistant">
   <link rel="icon" href="assets/tamanna-ai-official-logo.jpg" type="image/jpeg">
-  <link rel="apple-touch-icon" href="assets/tamanna-ai-official-logo.jpg">
-  <meta name="description" content="Tamanna AI — a private, local-first workspace for ideas, knowledge and conversations.">
-  <title>Tamanna AI — Your intelligent workspace</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
-  <script src="pwa.js" defer></script>
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>Tamanna AI</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/settings.css?v=20261106_settings2">
+  <link rel="stylesheet" href="css/auth.css?v=20261106_auth2">
 </head>
 <body>
-<div class="app-shell">
-  <aside class="sidebar" id="sidebar">
-    <a class="brand" href="#chat" aria-label="Tamanna AI home">
-      <img class="brand-mark" src="assets/tamanna-ai-official-logo.jpg" alt="Tamanna AI logo" width="42" height="42">
-      <span class="brand-copy"><strong>Tamanna<span> AI</span></strong><small>YOUR PRIVATE WORKSPACE</small></span>
-    </a>
-    <button class="new-chat" id="newChat"><span>＋</span> New chat <kbd>⌘ K</kbd></button>
-    <div class="side-label">WORKSPACE</div>
-    <nav class="nav-list" aria-label="Main navigation">
-      <button class="nav-item active" data-view="chat"><span class="nav-icon">✳</span> Chat <kbd>⌘ 1</kbd></button>
-      <button class="nav-item" data-view="history"><span class="nav-icon">◷</span> Conversations</button>
-      <button class="nav-item" data-view="knowledge"><span class="nav-icon">▤</span> Knowledge base</button>
-      <button class="nav-item" data-view="files"><span class="nav-icon">▧</span> My documents</button>
-    </nav>
-    <div class="side-label side-label-gap">MANAGE</div>
-    <nav class="nav-list" aria-label="Workspace management">
-      <button class="nav-item" data-view="activity"><span class="nav-icon">⌁</span> Activity</button>
-      <button class="nav-item" data-view="settings"><span class="nav-icon">⚙</span> Settings</button>
-      <button class="nav-item" data-view="about"><span class="nav-icon">ⓘ</span> About Tamanna</button>
-    </nav>
-    <div class="sidebar-recent">
-      <div class="recent-heading">RECENT CHATS <button id="clearRecent" title="Clear recent list">•••</button></div>
-      <div id="recentChats" class="recent-chats"><p class="recent-empty">Your conversations will appear here.</p></div>
-    </div>
-    <div class="sidebar-bottom">
-      <div class="local-card"><span class="status-dot"></span><div><strong>Private local mode</strong><small>No external AI API connected</small></div><span class="lock">⌑</span></div>
-      <button class="profile" id="profileButton"><span class="avatar" id="profileAvatar">T</span><span class="profile-copy"><strong id="profileName">My workspace</strong><small>Personal device</small></span><span class="profile-more">•••</span></button>
-    </div>
-  </aside>
-
-  <main class="main-area">
-    <header class="topbar">
-      <div class="topbar-left"><button class="mobile-menu" id="menuToggle" aria-label="Open navigation">☰</button><div class="breadcrumb">Tamanna <span>/</span> <strong id="pageName">Chat</strong></div></div>
-      <div class="top-actions"><span class="top-status"><i></i> LOCAL ENGINE</span><button class="icon-button" id="themeToggle" aria-label="Toggle light and dark mode">◐</button><button class="help-button" id="aboutButton">Help & info</button></div>
+  <div class="chat-app user-chat-app">
+    <header class="chat-header">
+      <div>
+        <div class="brand-lockup"><img class="brand-logo" src="assets/tamanna-ai-official-logo.jpg" alt="Tamanna AI TI Logo"><div><h1>Tamanna AI</h1>
+        <span>AI Assistant</span></div></div>
+      </div>
+      <div class="header-actions"><button id="newChatButton" class="header-action" type="button">＋ নতুন চ্যাট</button><button id="openAuth" class="header-action" type="button">লগইন</button><a class="header-action" href="admin/">Admin Panel</a><button id="openSettings" class="settings-trigger" type="button" aria-haspopup="dialog" aria-controls="settingsPanel">⚙ সেটিংস</button></div>
     </header>
 
-    <section class="view active-view" id="chatView">
-      <div class="chat-layout">
-        <div class="chat-main">
-          <div class="welcome" id="welcome">
-            <div class="orb"><span>✦</span><i class="orb-dot dot-one"></i><i class="orb-dot dot-two"></i><i class="orb-dot dot-three"></i></div>
-            <div class="eyebrow"><span></span> YOUR IDEAS, ONE SPACE</div>
-            <h1>Make room for<br><em>great thinking.</em></h1>
-            <p class="welcome-copy">A calmer place to ask, explore, plan and keep your knowledge close.</p>
-          </div>
-          <div class="suggestions" id="suggestions">
-            <button class="suggestion" data-prompt="What can Tamanna AI do?"><span class="suggestion-icon violet">✧</span><span><strong>Explore Tamanna</strong><small>Discover your workspace</small></span><b>↗</b></button>
-            <button class="suggestion" data-prompt="Help me create a clear project plan."><span class="suggestion-icon cyan">⌕</span><span><strong>Plan a project</strong><small>Turn an idea into steps</small></span><b>↗</b></button>
-            <button class="suggestion" data-prompt="Explain how the local knowledge base works."><span class="suggestion-icon gold">⌘</span><span><strong>Search knowledge</strong><small>Find information you added</small></span><b>↗</b></button>
-            <button class="suggestion" data-prompt="How does Tamanna protect my privacy?"><span class="suggestion-icon pink">◇</span><span><strong>Privacy first</strong><small>Understand local mode</small></span><b>↗</b></button>
-          </div>
-          <div class="messages" id="messages" aria-live="polite"></div>
-          <form class="composer" id="chatForm">
-            <label class="sr-only" for="messageInput">Message Tamanna AI</label>
-            <textarea id="messageInput" rows="1" placeholder="Message Tamanna..." required></textarea>
-            <div class="composer-footer"><div class="composer-hint"><span>✧</span><span>Local knowledge search</span><span class="hint-separator">·</span><span>Private on this device</span></div><div class="composer-actions"><button type="button" class="attach-button" id="quickAttach" title="Add a document">＋</button><button class="send-button" type="submit" aria-label="Send message">↑</button></div></div>
-          </form>
-          <input id="quickFileInput" type="file" accept=".txt,.md,.json,.csv,text/plain,text/markdown,application/json,text/csv" multiple hidden>
-          <p class="disclaimer">Local demo engine · Answers are retrieved from your knowledge, not generated by a trained language model.</p>
-        </div>
-        <aside class="chat-aside">
-          <div class="aside-card">
-            <div class="aside-title"><span>✦</span><strong>Workspace overview</strong></div>
-            <div class="mini-stat"><span>Conversations</span><strong id="statChats">0</strong></div>
-            <div class="mini-stat"><span>Knowledge entries</span><strong id="statKnowledge">7</strong></div>
-            <div class="mini-stat"><span>Documents added</span><strong id="statFiles">0</strong></div>
-            <div class="aside-divider"></div>
-            <button class="aside-link" data-view="knowledge">Manage knowledge <span>→</span></button>
-            <button class="aside-link" data-view="files">Add your documents <span>→</span></button>
-          </div>
-          <div class="aside-note"><span class="note-icon">⌑</span><strong>Your space stays yours.</strong><p>Chat history and imported documents stay in this browser. Nothing is sent to an AI provider.</p><button data-view="settings">Privacy settings →</button></div>
-        </aside>
+    <div class="conversation-toolbar"><label for="conversationSelect">পূর্বের কথোপকথন</label><select id="conversationSelect"><option value="">নতুন কথোপকথন</option></select><button id="deleteConversationButton" type="button" class="header-action" disabled>চ্যাট মুছুন</button></div>
+
+    <main id="chatBox" class="chat-box" aria-live="polite">
+      <div class="message ai-message">
+        <div class="message-name">Tamanna AI</div>
+        <div class="message-text">আমি Tamanna AI। কীভাবে সাহায্য করতে পারি?</div>
       </div>
+    </main>
+
+    <div class="composer-wrap"><div class="typing-area">
+      <textarea id="messageInput" rows="1" placeholder="Tamanna AI-কে মেসেজ করুন..." autocomplete="off" aria-label="আপনার মেসেজ"></textarea>
+      <button id="sendButton" type="button" aria-label="মেসেজ পাঠান">↑</button>
+    </div><p class="composer-note">GitHub Pages preview: live login ও AI chat চালাতে FastAPI server সংযুক্ত থাকতে হবে। Tamanna AI ভুল করতে পারে—গুরুত্বপূর্ণ তথ্য যাচাই করুন।</p></div>
+  </div>
+
+  <div id="settingsBackdrop" class="settings-backdrop" hidden></div>
+  <aside id="settingsPanel" class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" hidden>
+    <div class="settings-heading">
+      <h2 id="settingsTitle">অ্যাপ সেটিংস</h2>
+      <button id="closeSettings" class="settings-close" type="button" aria-label="সেটিংস বন্ধ করুন">✕</button>
+    </div>
+
+    <section class="settings-group">
+      <h3>Appearance / থিম</h3>
+      <div class="setting-row"><label for="themeSetting">Theme</label><select id="themeSetting" data-setting="theme"><option value="dark">Dark</option><option value="light">Light</option></select></div>
+      <div class="setting-row"><label for="accentSetting">Accent color</label><select id="accentSetting" data-setting="accent"><option value="purple">Purple</option><option value="blue">Blue</option><option value="teal">Teal</option></select></div>
+      <div class="setting-row"><label for="fontSetting">Font size</label><select id="fontSetting" data-setting="fontSize"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></div>
+      <div class="setting-row"><label for="compactSetting">Compact chat</label><input id="compactSetting" type="checkbox" data-setting="compactMode"></div>
     </section>
 
-    <section class="view" id="historyView"><div class="page-content"><div class="page-heading"><div><div class="eyebrow">YOUR THINKING, IN ONE PLACE</div><h2>Conversations</h2><p>Return to an idea or start a fresh conversation.</p></div><button class="primary-button" id="historyNewChat">＋ New chat</button></div><div class="toolbar"><label class="search-box"><span>⌕</span><input id="historySearch" type="search" placeholder="Search conversations..."></label><span class="count-pill" id="historyCount">0 chats</span></div><div id="historyGrid" class="history-grid"></div></div></section>
+    <section class="settings-group">
+      <h3>General / সাধারণ</h3>
+      <div class="setting-row"><label for="languageSetting">Language preference</label><select id="languageSetting" data-setting="language"><option value="bn">বাংলা</option><option value="en">English</option><option value="hi">हिन्दी</option><option value="ar">العربية</option></select></div>
+      <p class="settings-note">ভাষার পছন্দ সংরক্ষিত হবে। সম্পূর্ণ বহুভাষিক UI অনুবাদ এখনো সম্পন্ন নয়।</p>
+    </section>
 
-    <section class="view" id="knowledgeView"><div class="page-content"><div class="page-heading"><div><div class="eyebrow">YOUR PRIVATE LIBRARY</div><h2>Knowledge base</h2><p>Searchable information that helps Tamanna find relevant answers.</p></div><span class="count-pill" id="knowledgeCount">7 entries</span></div><div class="toolbar"><label class="search-box"><span>⌕</span><input id="knowledgeSearch" type="search" placeholder="Search your knowledge..."></label><span class="muted-inline">Built-in guides + your imported files</span></div><div class="knowledge-grid" id="knowledgeGrid"></div><div class="info-banner"><span>✧</span><div><strong>Make your library more useful.</strong><p>Add TXT, Markdown, JSON or CSV files in My documents. Their text becomes searchable in this browser session.</p></div><button data-view="files" class="text-action">Add documents →</button></div></div></section>
+    <section class="settings-group">
+      <h3>Account & Security</h3>
+      <p id="settingsAccountStatus" class="settings-note">অ্যাকাউন্টের অবস্থা যাচাই করা হচ্ছে…</p>
+      <div class="settings-actions"><button id="manageAccountButton" class="settings-secondary" type="button">অ্যাকাউন্ট পরিচালনা</button></div>
+      <p class="settings-note">প্রোফাইল পরিবর্তন, লগইন/লগআউট এবং পাসওয়ার্ড পরিবর্তন অ্যাকাউন্ট প্যানেল থেকে করা যাবে।</p>
+    </section>
 
-    <section class="view" id="filesView"><div class="page-content"><div class="page-heading"><div><div class="eyebrow">YOUR WORKSPACE LIBRARY</div><h2>My documents</h2><p>Bring your own notes and reference material into local search.</p></div><label class="primary-button file-picker">＋ Import documents<input id="fileInput" type="file" accept=".txt,.md,.json,.csv,text/plain,text/markdown,application/json,text/csv" multiple></label></div><div class="upload-panel"><div class="upload-icon">⇧</div><div><strong>Drop in your knowledge</strong><p>Choose TXT, Markdown, JSON or CSV files. Files are processed in your browser only.</p><small>Maximum 500 KB per file · Up to 10 files per session</small></div><label class="secondary-button file-picker">Browse files<input id="fileInputAlt" type="file" accept=".txt,.md,.json,.csv,text/plain,text/markdown,application/json,text/csv" multiple></label></div><div class="section-heading"><div><strong>Imported documents</strong><small id="fileSummary">No documents added yet</small></div><button class="subtle-button" id="clearFiles">Remove all</button></div><div class="panel file-panel"><div id="fileList" class="file-list"><p class="empty-state">No documents imported. Add a document to make its contents searchable.</p></div></div><p class="muted-note">Privacy note: documents are read locally and are not uploaded to a server. Imported document text is kept for the current page session and clears when you refresh or close the tab.</p></div></section>
+    <section class="settings-group" id="memoryManager">
+      <h3>Memory / ব্যক্তিগত স্মৃতি</h3>
+      <p class="settings-note">আপনার অ্যাকাউন্টে সংরক্ষিত তথ্য এখানে দেখুন, যোগ করুন, সম্পাদনা করুন বা মুছুন।</p>
+      <form id="memoryForm" class="auth-form">
+        <label for="memoryContent">নতুন Memory</label>
+        <textarea id="memoryContent" rows="3" maxlength="10000" required placeholder="যেমন: আমি বাংলায় উত্তর পছন্দ করি"></textarea>
+        <button type="submit">Memory সংরক্ষণ</button>
+      </form>
+      <p id="memoryStatus" class="settings-note" role="status" aria-live="polite">Memory দেখতে লগইন করুন।</p>
+      <div id="memoryList" class="memory-list" aria-live="polite"></div>
+    </section>
 
-    <section class="view" id="activityView"><div class="page-content"><div class="page-heading"><div><div class="eyebrow">TRANSPARENCY BY DESIGN</div><h2>Activity</h2><p>A clear overview of this browser workspace.</p></div><span class="live-pill"><i></i> Browser session</span></div><div class="stats-grid"><div class="stat-card"><span>AI provider</span><strong>None</strong><small>No external API configured</small></div><div class="stat-card"><span>Response engine</span><strong>Local search</strong><small>Keyword-based retrieval</small></div><div class="stat-card"><span>Storage</span><strong>Browser</strong><small>localStorage for chat history</small></div><div class="stat-card"><span>Privacy</span><strong>Local-first</strong><small>No document upload</small></div></div><div class="panel activity-panel"><div class="panel-title"><div><strong>Workspace events</strong><small>Events from this page session</small></div><button class="subtle-button" id="clearActivity">Clear activity</button></div><div id="activityList" class="event-list"></div></div></div></section>
+    <section class="settings-group" id="modelHealthDashboard">
+      <h3>Model Health / AI System Status</h3>
+      <p class="settings-note">Local Chat Model, Embedding Model এবং Knowledge Index-এর বর্তমান অবস্থা।</p>
+      <div class="health-grid">
+        <article class="health-card"><span>Chat Model</span><strong id="healthChatStatus">যাচাই হচ্ছে…</strong><small id="healthChatDetail">Local model runtime</small></article>
+        <article class="health-card"><span>Embedding Model</span><strong id="healthEmbeddingStatus">যাচাই হচ্ছে…</strong><small id="healthEmbeddingDetail">Knowledge retrieval</small></article>
+        <article class="health-card"><span>Ollama Runtime</span><strong id="healthOllamaStatus">যাচাই হচ্ছে…</strong><small id="healthOllamaDetail">Local model connection</small></article>
+        <article class="health-card"><span>Knowledge Index</span><strong id="healthKnowledgeStatus">লগইন প্রয়োজন</strong><small id="healthKnowledgeDetail">Private indexed documents</small></article>
+      </div>
+      <div class="system-metrics">
+        <h4>Host Performance Monitor</h4>
+        <p class="settings-note">Server-এর বর্তমান resource usage · Admin only</p>
+        <div class="health-grid">
+          <article class="health-card"><span>CPU Usage</span><strong id="metricCpu">অপেক্ষা করছে…</strong><small id="metricCpuDetail">Processor utilization</small></article>
+          <article class="health-card"><span>RAM Usage</span><strong id="metricRam">অপেক্ষা করছে…</strong><small id="metricRamDetail">Memory used / total</small></article>
+          <article class="health-card"><span>Disk Usage</span><strong id="metricDisk">অপেক্ষা করছে…</strong><small id="metricDiskDetail">Storage used / free</small></article>
+          <article class="health-card"><span>NVIDIA GPU</span><strong id="metricGpu">পরীক্ষা হচ্ছে…</strong><small id="metricGpuDetail">Optional GPU telemetry</small></article>
+        </div>
+        <p id="metricsUpdated" class="settings-note" role="status" aria-live="polite">Metrics এখনো সংগ্রহ করা হয়নি।</p>
+        <section class="resource-advice" aria-labelledby="resourceAdviceTitle">
+          <h4 id="resourceAdviceTitle">Performance Optimization Advisor</h4>
+          <p id="resourceAdviceStatus" class="settings-note" role="status" aria-live="polite">Resource metrics-এর অপেক্ষায়।</p>
+          <ul id="resourceAdviceList"></ul>
+          <small class="settings-note">এগুলো বর্তমান host metrics-ভিত্তিক পরামর্শ; কোনো setting বা model স্বয়ংক্রিয়ভাবে পরিবর্তন করা হয় না।</small>
+        </section>
+        <div class="model-benchmark">
+          <h4>Local AI Model Benchmark</h4>
+          <p class="settings-note">একটি ছোট inference test চালিয়ে বাস্তব speed metrics মাপুন।</p>
+          <button id="runModelBenchmark" class="settings-secondary" type="button">Run Model Benchmark</button>
+          <p id="benchmarkStatus" class="settings-note" role="status" aria-live="polite">Benchmark এখনো চালানো হয়নি।</p>
+          <div class="health-grid">
+            <article class="health-card"><span>Response Latency</span><strong id="benchmarkLatency">—</strong></article>
+            <article class="health-card"><span>Generation Speed</span><strong id="benchmarkGeneration">—</strong></article>
+            <article class="health-card"><span>Prompt Speed</span><strong id="benchmarkPrompt">—</strong></article>
+            <article class="health-card"><span>Output Tokens</span><strong id="benchmarkTokens">—</strong></article>
+          </div>
+          <small id="benchmarkDetails" class="settings-note">Metrics Ollama runtime থেকে আসবে; benchmark-এর সময় model load delay latency-তে অন্তর্ভুক্ত।</small>
+          <div class="benchmark-comparison">
+            <h5>Model Performance Comparison</h5>
+            <p id="benchmarkComparisonStatus" class="settings-note">কমপক্ষে একটি benchmark হলে তুলনা দেখা যাবে।</p>
+            <div id="benchmarkComparisonList" class="benchmark-comparison-list" aria-live="polite"></div>
+            <small class="settings-note">প্রতি model-এর সর্বশেষ ৫টি saved run-এর গড় ব্যবহার করা হয়; এটি model quality বা GPT/Gemini সমমানের প্রমাণ নয়।</small>
+            <div class="benchmark-regression">
+              <h5>Automatic Regression Watch</h5>
+              <p id="benchmarkRegressionStatus" class="settings-note" role="status" aria-live="polite">আগের benchmark-এর সঙ্গে তুলনা অপেক্ষমাণ।</p>
+              <ul id="benchmarkRegressionList"></ul>
+            </div>
+          </div>
+          <div class="benchmark-history">
+            <h5>Benchmark History</h5>
+            <p id="benchmarkHistoryStatus" class="settings-note" role="status" aria-live="polite">ইতিহাস লোড করা হয়নি।</p>
+            <ol id="benchmarkHistoryList"></ol>
+          </div>
+        </div>
+      </div>
+      <section class="model-resource-manager" aria-labelledby="modelResourceTitle">
+        <h4 id="modelResourceTitle">Loaded Model Resource Manager</h4>
+        <p class="settings-note">Ollama-তে বর্তমানে memory-তে থাকা model, size ও VRAM footprint · Admin only</p>
+        <p id="modelResourceStatus" class="settings-note" role="status" aria-live="polite">Resource তথ্য এখনো সংগ্রহ করা হয়নি।</p>
+        <h5>RAM / VRAM Model Recommendations</h5>
+        <p id="modelResourceAdviceStatus" class="settings-note" role="status" aria-live="polite">Recommendation অপেক্ষমাণ।</p>
+        <ul id="modelResourceAdvice"></ul>
+        <small class="settings-note">Model file size runtime memory-এর সমান নয়। এই shortlist কেবল আনুমানিক; load করার আগে বাস্তব RAM/VRAM এবং context requirement যাচাই করুন।</small>
+        <ul id="modelResourceList"></ul>
+        <button id="refreshModelResources" class="settings-secondary" type="button">Refresh Loaded Models</button>
+      </section>
+      <section class="model-recovery-advisor" aria-labelledby="modelRecoveryTitle">
+        <h4 id="modelRecoveryTitle">Local Model Recovery Assistant</h4>
+        <p id="modelRecoveryStatus" class="settings-note" role="status" aria-live="polite">Runtime diagnostics অপেক্ষমাণ।</p>
+        <ul id="modelRecoveryActions"></ul>
+        <small class="settings-note">Read-only guidance: এটি নিজে থেকে service restart, model load/download বা configuration পরিবর্তন করে না।</small>
+        <button id="refreshModelRecovery" class="settings-secondary" type="button">Run Recovery Check</button>
+      </section>
+      <div class="model-manager">
+        <label for="localModelSelect">Installed local Chat Model</label>
+        <select id="localModelSelect" disabled><option value="">প্রথমে status refresh করুন</option></select>
+        <button id="saveLocalModel" class="settings-secondary" type="button" disabled>এই Model নির্বাচন করুন</button>
+        <p id="modelSelectStatus" class="settings-note" role="status" aria-live="polite">শুধু আগে থেকে installed local model নির্বাচন করা যাবে।</p>
+      </div>
+      <div class="model-download">
+        <label for="downloadModelName">নতুন Local Model Download</label>
+        <input id="downloadModelName" type="text" maxlength="200" autocomplete="off" placeholder="যেমন: qwen2.5:7b">
+        <button id="downloadLocalModel" class="settings-secondary" type="button">Download Model</button>
+        <progress id="modelDownloadProgress" max="100" value="0" aria-label="Model download progress"></progress>
+        <p id="modelDownloadStatus" class="settings-note" role="status" aria-live="polite">Download শুরু হবে শুধু আপনার button চাপার পর। Model size অনুযায়ী সময় ও disk space লাগবে।</p>
+      </div>
+      <div class="settings-actions"><button id="refreshModelHealth" class="settings-secondary" type="button">Status আবার পরীক্ষা করুন</button></div>
+      <p id="modelHealthUpdated" class="settings-note" role="status" aria-live="polite">Status এখনো পরীক্ষা করা হয়নি।</p>
+    </section>
 
-    <section class="view" id="settingsView"><div class="page-content"><div class="page-heading"><div><div class="eyebrow">MAKE IT YOURS</div><h2>Settings</h2><p>Personalize the way your workspace looks and behaves.</p></div></div><div class="settings-grid"><div class="panel settings-panel"><div class="panel-heading"><strong>Appearance</strong><small>Choose a look that feels right.</small></div><div class="setting-row"><div><strong>Color mode</strong><small>Switch between dark and light appearance</small></div><div class="segmented"><button data-mode="dark">Dark</button><button data-mode="light">Light</button></div></div><div class="setting-block"><strong>Accent palette</strong><small>Choose from the seven Tamanna colors.</small><div class="palette-picker" id="palettePicker"><button data-palette="violet" aria-label="Violet"></button><button data-palette="blue" aria-label="Blue"></button><button data-palette="cyan" aria-label="Cyan"></button><button data-palette="green" aria-label="Green"></button><button data-palette="gold" aria-label="Gold"></button><button data-palette="pink" aria-label="Pink"></button><button data-palette="orange" aria-label="Orange"></button></div></div><div class="setting-row"><div><strong>Compact sidebar</strong><small>Give your content more room</small></div><label class="switch"><input type="checkbox" id="compactSetting"><span></span></label></div></div><div class="panel settings-panel"><div class="panel-heading"><strong>Privacy & data</strong><small>Manage what stays in this browser.</small></div><div class="setting-row"><div><strong>Conversation memory</strong><small>Save conversations in local browser storage</small></div><label class="switch"><input type="checkbox" id="memorySetting" checked><span></span></label></div><div class="setting-row"><div><strong>Export workspace</strong><small>Download your conversations and preferences</small></div><button class="secondary-button" id="exportData">Export data</button></div><div class="setting-row"><div><strong>Clear all local data</strong><small>Remove saved conversations and preferences</small></div><button class="danger-button" id="resetData">Reset data</button></div></div><div class="panel settings-panel profile-settings"><div class="panel-heading"><strong>Workspace profile</strong><small>A local label for this browser, not an online account.</small></div><label class="field-label" for="displayNameInput">Display name</label><div class="inline-field"><input id="displayNameInput" maxlength="32" placeholder="Your workspace"><button class="secondary-button" id="saveProfile">Save name</button></div><p class="muted-note">There is no login, cloud account or synchronized profile in this static website.</p></div></div></div></section>
+    <section class="settings-group" id="knowledgeManager">
+      <h3>Knowledge Base / জ্ঞানভান্ডার</h3>
+      <p class="settings-note">নিজের TXT, Markdown বা JSON নথি index করুন। Embedding model বদলালে পুরোনো নথির vector এখানে পুনরায় তৈরি করুন।</p>
+      <form id="knowledgeForm" class="auth-form">
+        <label for="knowledgeFilename">নথির নাম</label>
+        <input id="knowledgeFilename" type="text" maxlength="180" required placeholder="notes.md">
+        <label for="knowledgeContent">নথির লেখা</label>
+        <textarea id="knowledgeContent" rows="4" maxlength="1000000" required placeholder="আপনার জ্ঞান বা নথির লেখা এখানে দিন"></textarea>
+        <button type="submit">Knowledge index করুন</button>
+      </form>
+      <div class="settings-actions">
+        <button id="reindexKnowledgeButton" class="settings-secondary" type="button">সব Knowledge পুনরায় index করুন</button>
+      </div>
+      <p id="knowledgeStatus" class="settings-note" role="status" aria-live="polite">Knowledge Base পরিচালনা করতে লগইন করুন।</p>
+      <div id="knowledgeList" class="memory-list" aria-live="polite"></div>
+    </section>
 
-    <section class="view" id="aboutView"><div class="page-content about-content"><div class="about-hero"><div class="orb"><span>✦</span></div><div class="eyebrow">A PRIVATE SPACE TO THINK</div><h2>Meet <em>Tamanna AI.</em></h2><p>A thoughtful, local-first workspace for conversations, knowledge and ideas — designed to keep your information close.</p></div><div class="feature-grid"><article class="feature-card"><span class="feature-icon violet">✧</span><h3>One calm workspace</h3><p>Chat, documents, knowledge and settings in one clear interface.</p></article><article class="feature-card"><span class="feature-icon cyan">⌕</span><h3>Your knowledge</h3><p>Search built-in guides and documents you choose to import.</p></article><article class="feature-card"><span class="feature-icon green">⌑</span><h3>Local-first privacy</h3><p>No Gemini, GPT or external AI API is called by this demo.</p></article><article class="feature-card"><span class="feature-icon gold">◇</span><h3>Made to be yours</h3><p>Choose your accent color, theme and local workspace name.</p></article></div><div class="panel model-note"><div class="eyebrow">IMPORTANT MODEL INFORMATION</div><h3>Honest about how it works.</h3><p>This version uses keyword-based retrieval over a small curated knowledge library and imported document text. It is not a trained neural language model and does not generate general-purpose reasoning. A fully independent local AI model would require open model weights, an inference runtime and suitable hardware.</p></div><div class="about-footer"><span>© 2026 Tamanna AI · Owner: HM INSAN ALI</span><button data-view="chat" class="text-action">Back to chat →</button></div></div></section>
-  </main>
-</div>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-<dialog id="aboutDialog"><div class="dialog-inner"><button class="dialog-close" id="closeDialog" aria-label="Close">×</button><div class="dialog-mark brand-mark">T<span>✦</span></div><div class="eyebrow">TAMANNA AI WORKSPACE</div><h2>A private space to think.</h2><p>This website runs locally in your browser. It does not connect to Gemini, GPT or another external AI provider. Answers come from local keyword search and may not answer every question.</p><button class="primary-button" id="dialogOk">Got it</button></div></dialog>
+    <section class="settings-group">
+      <h3>Chat</h3>
+      <p class="settings-note">চ্যাট ইতিহাস সার্ভারের SQLite account storage-এ সংরক্ষিত হয়। এই বোতামটি শুধু বর্তমান স্ক্রিন পরিষ্কার করে; সার্ভারে সংরক্ষিত ইতিহাস মুছে দেয় না।</p>
+      <div class="settings-actions"><button id="clearLocalChat" class="settings-secondary" type="button">বর্তমান স্ক্রিন পরিষ্কার</button></div>
+    </section>
+
+    <div class="settings-actions">
+      <button id="resetSettings" class="settings-secondary" type="button">Reset settings</button>
+    </div>
+    <p id="settingsSaveStatus" role="status" aria-live="polite"></p>
+  </aside>
+
+
+  <div id="authBackdrop" class="settings-backdrop" hidden></div>
+  <section id="authPanel" class="settings-panel auth-panel" role="dialog" aria-modal="true" aria-labelledby="authTitle" hidden>
+    <div class="settings-heading"><h2 id="authTitle">Tamanna AI Account</h2><button id="closeAuth" class="settings-close" type="button" aria-label="বন্ধ করুন">✕</button></div>
+    <p id="authStatus" class="settings-note" role="status" aria-live="polite">অ্যাকাউন্টে লগইন করুন অথবা নতুন অ্যাকাউন্ট তৈরি করুন।</p>
+    <div class="auth-tabs"><button id="showLogin" type="button" class="settings-secondary">লগইন</button><button id="showSignup" type="button" class="settings-secondary">সাইন আপ</button></div>
+    <form id="loginForm" class="auth-form">
+      <label for="loginEmail">ইমেইল</label><input id="loginEmail" type="email" autocomplete="email" required maxlength="254">
+      <label for="loginPassword">পাসওয়ার্ড</label><input id="loginPassword" type="password" autocomplete="current-password" required maxlength="128">
+      <button type="submit">লগইন</button>
+    </form>
+    <form id="signupForm" class="auth-form" hidden>
+      <label for="signupName">আপনার নাম</label><input id="signupName" type="text" autocomplete="name" required minlength="2" maxlength="80">
+      <label for="signupEmail">ইমেইল</label><input id="signupEmail" type="email" autocomplete="email" required maxlength="254">
+      <label for="signupPassword">পাসওয়ার্ড (কমপক্ষে ১২ অক্ষর)</label><input id="signupPassword" type="password" autocomplete="new-password" required minlength="12" maxlength="128">
+      <button type="submit">অ্যাকাউন্ট তৈরি করুন</button>
+    </form>
+    <div id="accountDetails" hidden>
+      <p id="accountIdentity"></p>
+      <form id="profileForm" class="auth-form"><label for="profileName">নাম পরিবর্তন</label><input id="profileName" type="text" minlength="2" maxlength="80" required><button type="submit">প্রোফাইল সংরক্ষণ</button></form>
+      <form id="changePasswordForm" class="auth-form">
+        <h3>পাসওয়ার্ড পরিবর্তন</h3>
+        <label for="currentPassword">বর্তমান পাসওয়ার্ড</label><input id="currentPassword" type="password" autocomplete="current-password" required maxlength="128">
+        <label for="newPassword">নতুন পাসওয়ার্ড (কমপক্ষে ১২ অক্ষর)</label><input id="newPassword" type="password" autocomplete="new-password" required minlength="12" maxlength="128">
+        <button type="submit">পাসওয়ার্ড পরিবর্তন করুন</button>
+      </form>
+      <button id="logoutButton" class="settings-secondary" type="button">লগআউট</button>
+    </div>
+    <p class="settings-note">পাসওয়ার্ড নিরাপদভাবে হ্যাশ করে সার্ভারে রাখা হয়। পাসওয়ার্ড ব্রাউজারে সংরক্ষণ করা হয় না।</p>
+  </section>
+
+  <script src="js/auth.js?v=20261106_account_security"></script>
+  <script src="js/chat.js?v=20261108_conversations"></script>
+  <script src="js/settings.js?v=20261106_preferences2"></script>
+  <script src="js/memories.js?v=20261108_memory_dashboard"></script>
+  <script src="js/knowledge.js?v=20261108_knowledge_dashboard"></script>
+  <script src="js/model-health.js?v=20261108_recovery_advisor"></script>
 </body>
 </html>
