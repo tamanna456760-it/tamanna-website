@@ -9,9 +9,9 @@
   "theme_color": "#090b18",
   "icons": [
     {
-      "src": "assets/tamanna-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "assets/tamanna-ai-official-logo.jpg",
+      "sizes": "256x256",
+      "type": "image/jpeg",
       "purpose": "any"
     }
   ]
