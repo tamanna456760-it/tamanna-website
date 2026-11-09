@@ -28,7 +28,7 @@ class WebsiteTests(unittest.TestCase):
         self.js = (ROOT / "app.js").read_text(encoding="utf-8")
 
     def test_required_website_files_exist(self):
-        for name in ("index.html", "styles.css", "app.js", "pwa.js", "sw.js", "manifest.webmanifest", "404.html", "README.md", "assets/tamanna-icon.svg"):
+        for name in ("index.html", "styles.css", "app.js", "pwa.js", "sw.js", "manifest.webmanifest", "404.html", "README.md", "assets/tamanna-ai-official-logo.jpg"):
             with self.subTest(name=name):
                 self.assertTrue((ROOT / name).is_file())
                 self.assertGreater((ROOT / name).stat().st_size, 0)
@@ -59,7 +59,8 @@ class WebsiteTests(unittest.TestCase):
         parser.feed(self.html)
         icon_links = [line for line in self.html.splitlines() if 'rel="icon"' in line]
         self.assertEqual(len(icon_links), 1)
-        self.assertIn('href="assets/tamanna-icon.svg"', icon_links[0])
+        self.assertIn('href="assets/tamanna-ai-official-logo.jpg"', icon_links[0])
+        self.assertIn('type="image/jpeg"', icon_links[0])
 
     def test_seven_color_palette_and_responsive_layout(self):
         parser = WebsiteHTMLParser()
@@ -86,7 +87,7 @@ class WebsiteTests(unittest.TestCase):
         self.assertIn('rel="manifest"', self.html)
         self.assertIn("serviceWorker.register", (ROOT / "pwa.js").read_text(encoding="utf-8"))
         self.assertIn("addAll(APP_SHELL)", (ROOT / "sw.js").read_text(encoding="utf-8"))
-        self.assertIn("tamanna-icon.svg", (ROOT / "manifest.webmanifest").read_text(encoding="utf-8"))
+        self.assertIn("assets/tamanna-ai-official-logo.jpg", (ROOT / "manifest.webmanifest").read_text(encoding="utf-8"))
 
     def test_workspace_has_transparent_model_disclosure(self):
         self.assertIn("not a trained neural language model", self.js.lower())
