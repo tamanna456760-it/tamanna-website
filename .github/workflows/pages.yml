@@ -29,7 +29,8 @@ jobs:
           test -s admin/index.html
           echo "Tamanna website files are present."
       - name: Check JavaScript syntax
-        run: node --check js/chat.js
+        run: |
+          node --check js/chat.js
           node --check js/auth.js
           node --check js/admin.js
       - name: Run website tests
