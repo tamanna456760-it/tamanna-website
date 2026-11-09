@@ -277,3 +277,12 @@ button:focus-visible, select:focus-visible, input:focus-visible {
 .model-recovery-advisor ul { display:grid; gap:7px; margin:0; padding-left:20px; }
 .model-recovery-advisor li { overflow-wrap:anywhere; color:var(--text); font-size:.84rem; }
 .model-recovery-advisor button:disabled { opacity:.55; cursor:wait; }
+
+:root[data-accent="green"] { --settings-accent:#35c98a; --accent:#35c98a; }
+:root[data-accent="gold"] { --settings-accent:#d9a441; --accent:#d9a441; }
+:root[data-accent="pink"] { --settings-accent:#e879b0; --accent:#e879b0; }
+:root[data-accent="orange"] { --settings-accent:#ef8b42; --accent:#ef8b42; }
+:root[data-accent="green"] button:not(.settings-close):not(.settings-secondary) { background:linear-gradient(135deg,#35c98a,#218f68); }
+:root[data-accent="gold"] button:not(.settings-close):not(.settings-secondary) { background:linear-gradient(135deg,#e7bd59,#b9872c); }
+:root[data-accent="pink"] button:not(.settings-close):not(.settings-secondary) { background:linear-gradient(135deg,#ed8bbb,#be5f92); }
+:root[data-accent="orange"] button:not(.settings-close):not(.settings-secondary) { background:linear-gradient(135deg,#ff9a55,#ce642e); }

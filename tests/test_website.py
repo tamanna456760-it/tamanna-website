@@ -35,7 +35,7 @@ class WebsiteTests(unittest.TestCase):
   self.assertNotIn("generativelanguage.googleapis.com",text);self.assertNotIn("api.openai.com",text)
  def test_seven_color_palette(self):
   css=(ROOT/"css/settings.css").read_text()
-  for x in ("violet","blue","teal","green","gold","pink","orange"):self.assertIn(x,css)
+  for x in ("purple","blue","teal","green","gold","pink","orange"):self.assertIn(x,css)
  def test_admin_preview_safe(self):
   js=(ROOT/"js/admin.js").read_text();self.assertIn("/api/admin/overview",js);self.assertIn("setPreview",js);self.assertIn("Access denied",js)
  def test_pwa_shell(self):

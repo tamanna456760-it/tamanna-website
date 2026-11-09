@@ -14,7 +14,7 @@
   });
   const choices = {
     theme: ["dark", "light"],
-    accent: ["purple", "blue", "teal"],
+    accent: ["purple", "blue", "teal", "green", "gold", "pink", "orange"],
     language: ["bn", "en", "hi", "ar"],
     fontSize: ["small", "medium", "large"]
   };
