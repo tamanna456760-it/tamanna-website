@@ -23,11 +23,15 @@ jobs:
       - name: Validate website files
         run: |
           test -s index.html
-          test -s styles.css
-          test -s app.js
+          test -s css/style.css
+          test -s css/admin.css
+          test -s js/chat.js
+          test -s admin/index.html
           echo "Tamanna website files are present."
       - name: Check JavaScript syntax
-        run: node --check app.js
+        run: node --check js/chat.js
+          node --check js/auth.js
+          node --check js/admin.js
       - name: Run website tests
         run: python -m unittest discover -s tests -v
       - name: Upload Pages artifact

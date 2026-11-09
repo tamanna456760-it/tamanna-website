@@ -2,78 +2,39 @@
 
 <div align="center">
 
-**A polished, responsive local-first AI workspace for conversations, knowledge and documents.**
+**Tamanna AI — Chat Panel + Admin Control Center**
 
-[🌐 Open Tamanna AI Website](https://tamanna456760-it.github.io/tamanna-website/)
+[🌐 Open Tamanna AI Chat](https://tamanna456760-it.github.io/tamanna-website/)
 
-[Source code](https://github.com/tamanna456760-it/tamanna-website) · [GitHub Actions](https://github.com/tamanna456760-it/tamanna-website/actions)
+[🛡️ Open Tamanna Admin](https://tamanna456760-it.github.io/tamanna-website/admin/)
+
+[Source repository](https://github.com/tamanna456760-it/Tamanna-) · [Website repository](https://github.com/tamanna456760-it/tamanna-website) · [GitHub Actions](https://github.com/tamanna456760-it/tamanna-website/actions)
 
 </div>
 
-> GitHub README pages cannot run an interactive website inline. Use the website link above to open the complete experience. The live link becomes available after GitHub Pages deployment succeeds.
+## Imported panels
 
-## Website features
+The previous standalone workspace homepage has been replaced with the Tamanna AI chat panel from the `Tamanna-` repository. The Admin Control Center is published at `/admin/`.
 
-- **Professional workspace UI:** responsive sidebar, navigation, chat composer and clean content views
-- **Chat:** local question search, starter prompts, conversation interface and new-chat action
-- **Conversations:** locally saved chat history, recent chat shortcuts and conversation search
-- **Knowledge base:** built-in reference library, searchable entries and source labels
-- **My documents:** import TXT, Markdown, JSON and CSV files (up to 500 KB each, 10 per session); imported text is searchable in chat
-- **Activity:** transparent local workspace event list and basic system overview
-- **Settings:** seven accent colors (violet, blue, cyan, green, gold, pink and orange), dark/light mode, compact sidebar, local workspace name, memory toggle
-- **Data tools:** export saved conversations and preferences as JSON, or reset local data
-- **Mobile support:** responsive layout, mobile navigation and touch-friendly controls
-- **Accessibility basics:** semantic sections, visible labels, keyboard focus and reduced-motion support
-- **Installable PWA:** add Tamanna to a supported device's home screen
-- **Offline shell:** previously cached app files can load without a network connection
-- **Custom branding:** matching SVG app icon and browser icon
-- **Friendly 404 page:** a branded route back to the workspace
-- **No external AI APIs:** no Gemini, GPT or cloud AI API calls
+- User Chat: Bengali chat interface, sign-in/sign-up panel, preferences and chat composer.
+- Admin Control Center: admin overview, access state, backend/model/database status and management module overview.
+- The existing official Tamanna AI logo from this website repository is retained.
+- Responsive styles, account/settings scripts, memory/knowledge/model health UI and PWA shell are included.
+- Chat frontend uses FastAPI `POST /api/chat`, `GET /api/history`, and `/api/auth/*`.
+- Admin frontend uses `GET /api/admin/overview` and `POST /api/auth/logout`.
+- No Gemini, GPT, or hosted model API is used.
 
-## Important model disclosure
+## GitHub Pages limitation
 
-This website does **not** contain a newly trained general-purpose AI model. Its current response engine performs keyword-based retrieval over a small curated knowledge library and documents imported during the current browser session. It returns relevant stored text when it finds a match; it does not provide general-purpose reasoning or generate original answers like a trained language model.
+GitHub Pages is static hosting. The Chat and Admin panels load as website interfaces, but real account login, live AI generation, chat persistence and live admin data require the FastAPI backend to be deployed and connected on the same origin. On GitHub Pages without that backend, the Admin panel explicitly shows Preview Mode and login/chat API calls are unavailable. No fake authentication or fabricated live statistics are shown.
 
-A genuinely independent local AI model requires open model weights, a compatible inference runtime and suitable hardware. Training or fine-tuning additionally requires a prepared dataset and compute resources.
+The backend uses local Ollama for inference. GitHub Pages does not run Python or Ollama.
 
-## Privacy and limitations
+## Deployment
 
-- Saved conversations and preferences are stored in this browser using `localStorage`; they are not synced to a server.
-- Imported document text is processed locally and held in memory for the current page session. Refreshing or closing the page clears imported documents.
-- This static website does not provide online user accounts, server-side authentication, encrypted cloud storage or multi-device synchronization.
-- Do not enter passwords, API keys or sensitive personal information.
-- Local browser storage is not a substitute for a secure encrypted database.
+GitHub Actions validates assets and JavaScript, runs website tests, then deploys to GitHub Pages.
 
-## Run locally
-
-No package installation is required.
-
-1. Clone or download this repository.
-2. Open `index.html` in a modern browser, or serve this directory using a static web server.
-3. Start using Tamanna AI.
-
-## GitHub Pages deployment
-
-The repository includes a GitHub Actions workflow at `.github/workflows/pages.yml`.
-
-1. Open [Repository Pages settings](https://github.com/tamanna456760-it/tamanna-website/settings/pages).
-2. Set **Build and deployment → Source** to **GitHub Actions** if the setting is available.
-3. Push to `main`, or manually run the workflow from [Actions](https://github.com/tamanna456760-it/tamanna-website/actions).
-4. Wait for both the build and deploy jobs to succeed.
-5. Open: https://tamanna456760-it.github.io/tamanna-website/
-
-A successful build alone does not mean the website is published. GitHub Pages must be enabled for the repository and the deploy job must finish successfully.
-
-## Project structure
-
-- `index.html` — complete website structure and workspace views
-- `styles.css` — responsive professional design, themes and seven-color palette
-- `app.js` — local chat retrieval, conversation history, document import, navigation and settings
-- `tests/test_website.py` — automated website checks
-- `manifest.webmanifest` — installable app metadata
-- `pwa.js` / `sw.js` — service-worker registration and offline app shell
-- `assets/tamanna-icon.svg` — app icon
-- `404.html` — branded not-found page
-- `.github/workflows/pages.yml` — validation and GitHub Pages deployment
+- Chat: https://tamanna456760-it.github.io/tamanna-website/
+- Admin: https://tamanna456760-it.github.io/tamanna-website/admin/
 
 **Owner:** HM INSAN ALI
