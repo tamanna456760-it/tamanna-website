@@ -105,6 +105,11 @@
       showStatus("আপনি লগআউট করেছেন।");
     } catch (error) { showStatus(error.message, true); }
   });
-  api("/me").then(result => renderUser(result.user)).catch(() => renderUser(null));
+  api("/me").then(result => {
+    renderUser(result.user);
+    if (result.user) {
+      window.dispatchEvent(new CustomEvent("tamanna:authenticated", {detail:result.user}));
+    }
+  }).catch(() => renderUser(null));
   window.TamannaAuth = { api, getUser: () => currentUser };
 })();
