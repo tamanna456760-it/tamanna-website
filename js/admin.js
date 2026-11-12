@@ -31,7 +31,7 @@ async function connect(){
     const response=await fetch("/api/admin/overview",{credentials:"same-origin",headers:{Accept:"application/json"}});
     const data=await response.json().catch(()=>({}));
     if(response.status===401||response.status===403){
-      banner.textContent=response.status===401?"Admin sign-in required. Open User Chat, sign in with the allowlisted account, then revisit /admin.":"Access denied. This signed-in account is not authorized as an administrator.";
+      banner.textContent=response.status===401?"Admin sign-in required. Use the dedicated administrator authentication flow.":"Access denied. This signed-in account is not authorized as an administrator.";
       banner.classList.add("error");status.textContent="Access denied";$("adminContent").hidden=true;return;
     }
     if(!response.ok)throw new Error(data.detail||("HTTP "+response.status));
@@ -44,7 +44,7 @@ async function connect(){
 logout.addEventListener("click",async()=>{
   logout.disabled=true;
   try{await fetch("/api/auth/logout",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:"{}"});}
-  finally{location.href="../";}
+  finally{logout.hidden=true;logout.disabled=false;banner.textContent="Signed out. Admin session ended.";status.textContent="Signed out";status.classList.remove("online");}
 });
 connect();
 })();
