@@ -39,6 +39,13 @@ class WebsiteTests(unittest.TestCase):
  def test_seven_color_palette(self):
   css=(ROOT/"css/settings.css").read_text()
   for x in ("purple","blue","teal","green","gold","pink","orange"):self.assertIn(x,css)
+ def test_restored_session_triggers_chat_history_load(self):
+  auth=(ROOT/"js/auth.js").read_text()
+  chat=(ROOT/"js/chat.js").read_text()
+  self.assertIn("api(\"/me\").then(result => {",auth)
+  self.assertIn("new CustomEvent(\"tamanna:authenticated\"",auth)
+  self.assertIn("addEventListener(\"tamanna:authenticated\",history)",chat)
+  self.assertIn("api(\"/api/history\")",chat)
  def test_chat_does_not_expose_admin_only_controls_or_requests(self):
   for marker in ("Host Performance Monitor","Loaded Model Resource Manager","Local Model Recovery Assistant","metricCpu","admin/overview"):
    self.assertNotIn(marker,self.html)
