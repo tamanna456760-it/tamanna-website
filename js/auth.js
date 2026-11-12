@@ -112,7 +112,7 @@
     }
   }).catch(error => {
     renderUser(null);
-    const isPagesPreview = /(^|\\.)github\\.io$/i.test(window.location.hostname);
+    const isPagesPreview = /(^|\.)github\.io$/i.test(window.location.hostname);
     showStatus(
       isPagesPreview
         ? "GitHub Pages শুধু website preview চালায়; এখানে FastAPI account server নেই। Live FastAPI website/server চালু হলে login ব্যবহার করুন।"
