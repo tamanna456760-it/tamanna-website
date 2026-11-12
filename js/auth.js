@@ -110,6 +110,15 @@
     if (result.user) {
       window.dispatchEvent(new CustomEvent("tamanna:authenticated", {detail:result.user}));
     }
-  }).catch(() => renderUser(null));
+  }).catch(error => {
+    renderUser(null);
+    const isPagesPreview = /(^|\\.)github\\.io$/i.test(window.location.hostname);
+    showStatus(
+      isPagesPreview
+        ? "GitHub Pages শুধু website preview চালায়; এখানে FastAPI account server নেই। Live FastAPI website/server চালু হলে login ব্যবহার করুন।"
+        : "Tamanna account server-এ সংযোগ করা যায়নি (" + (error?.message || "network error") + ")। Server URL, HTTPS এবং API availability পরীক্ষা করুন।",
+      true
+    );
+  });
   window.TamannaAuth = { api, getUser: () => currentUser };
 })();
