@@ -19,8 +19,8 @@ class WebsiteTests(unittest.TestCase):
   self.assertNotIn("Open User Chat",self.admin)
   self.assertNotIn('href="../"',self.admin)
  def test_admin_panel_is_published(self):
-  self.assertIn("Admin Dashboard",self.admin);self.assertIn("../js/admin.js",self.admin);self.assertIn("../css/admin.css",self.admin)
-  self.assertIn("PREVIEW MODE",(ROOT/"js/admin.js").read_text())
+  self.assertIn("Admin Dashboard",self.admin);self.assertIn("../js/admin.js",self.admin);self.assertIn("../css/admin.css",self.admin);self.assertIn("runEthicalAudit",self.admin);self.assertIn("antivirusForm",self.admin);self.assertNotIn("Open User Chat",self.admin)
+  self.assertIn("PREVIEW MODE",(ROOT/"js/admin.js").read_text());self.assertIn("/api/admin/security/ethical-audit",(ROOT/"js/admin.js").read_text());self.assertIn("/tamanna-ai/security/antivirus/scan-upload",(ROOT/"js/admin.js").read_text());self.assertNotIn('location.href="/"',(ROOT/"js/admin.js").read_text())
  def test_assets_exist(self):
   for x in self.parser.assets:
    if x.startswith(("http:","https:","#")):continue
