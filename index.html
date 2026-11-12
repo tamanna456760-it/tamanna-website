@@ -19,8 +19,14 @@
         <div class="brand-lockup"><img class="brand-logo" src="assets/tamanna-ai-official-logo.jpg" alt="Tamanna AI TI Logo"><div><h1>Tamanna AI</h1>
         <span>AI Assistant</span></div></div>
       </div>
-      <div class="header-actions"><button id="newChatButton" class="header-action" type="button">＋ নতুন চ্যাট</button><button id="openAuth" class="header-action" type="button">লগইন</button><a class="header-action" href="admin/">Admin Panel</a><button id="openSettings" class="settings-trigger" type="button" aria-haspopup="dialog" aria-controls="settingsPanel">⚙ সেটিংস</button></div>
+      
     </header>
+
+    <nav class="chat-side-rail" aria-label="Chat tools">
+      <button id="newChatButton" class="rail-action primary" type="button"><span aria-hidden="true">＋</span><small>নতুন চ্যাট</small></button>
+      <button id="openAuth" class="rail-action" type="button"><span aria-hidden="true">♙</span><small>লগইন</small></button>
+      <button id="openSettings" class="rail-action" type="button" aria-haspopup="dialog" aria-controls="settingsPanel"><span aria-hidden="true">⚙</span><small>সেটিংস</small></button>
+    </nav>
 
     <div class="conversation-toolbar"><label for="conversationSelect">পূর্বের কথোপকথন</label><select id="conversationSelect"><option value="">নতুন কথোপকথন</option></select><button id="deleteConversationButton" type="button" class="header-action" disabled>চ্যাট মুছুন</button></div>
 
