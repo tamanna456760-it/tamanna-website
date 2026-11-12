@@ -45,6 +45,8 @@ class WebsiteTests(unittest.TestCase):
   health=(ROOT/"js/model-health.js").read_text()
   for endpoint in ("/tamanna-ai/system/metrics","/tamanna-ai/model/resources","/tamanna-ai/model/recovery"):
    self.assertNotIn(endpoint,health)
+ def test_admin_logout_only_reports_success_after_server_confirms(self):
+  js=(ROOT/"js/admin.js").read_text();self.assertIn("data.ok!==true",js);self.assertIn("Sign out failed. Your session may still be active.",js);self.assertNotIn("finally{logout.hidden=true",js)
  def test_admin_preview_safe(self):
   js=(ROOT/"js/admin.js").read_text();self.assertIn("/api/admin/overview",js);self.assertIn("setPreview",js);self.assertIn("Access denied",js)
  def test_pwa_shell(self):
