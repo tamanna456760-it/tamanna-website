@@ -237,3 +237,39 @@ body:has(.user-chat-app){padding:0;background:var(--bg)}
 .composer-note{text-align:center;color:#7783a3;font-size:.72rem;margin:8px 0 0}
 .settings-panel{z-index:30}.settings-backdrop{z-index:25}
 @media(max-width:600px){body:has(.user-chat-app){padding:0}.user-chat-app .chat-header{padding:12px}.brand-logo{width:36px;height:36px}.header-actions{gap:5px}.header-actions button{padding:8px 9px;font-size:.76rem}.user-chat-app .chat-box{min-height:calc(100vh - 175px);padding:20px 12px}.composer-wrap{padding:8px 10px 12px}.user-chat-app .message{max-width:96%;padding:12px 13px}}
+
+
+/* App-like chat navigation: controls live in a dedicated left rail, not the header. */
+.user-chat-app { position:relative; padding-left:82px; }
+.user-chat-app .chat-header { position:sticky; top:0; }
+.chat-side-rail {
+  position:fixed; z-index:10; inset:0 auto 0 0; width:82px;
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  padding:18px 9px; background:rgba(15,21,40,.97);
+  border-right:1px solid var(--border); backdrop-filter:blur(16px);
+}
+.rail-action {
+  width:62px; min-height:58px; padding:8px 4px; display:flex;
+  flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  color:var(--text); background:var(--panel2); border:1px solid var(--border);
+  border-radius:14px; font:inherit; cursor:pointer;
+}
+.rail-action span { font-size:1.25rem; line-height:1.1; }
+.rail-action small { font-size:.65rem; line-height:1.2; }
+.rail-action:hover,.rail-action:focus-visible { border-color:var(--accent); }
+.rail-action.primary { background:linear-gradient(145deg,#5148b6,#302b69); }
+.user-chat-app .chat-header { margin-left:0; }
+.user-chat-app .conversation-toolbar { margin:0; }
+.user-chat-app .chat-box,.user-chat-app .composer-wrap { width:min(100%,850px); }
+.settings-trigger { float:none; margin:0; }
+@media(max-width:600px) {
+  .user-chat-app { padding-left:0; padding-bottom:72px; }
+  .chat-side-rail {
+    inset:auto 0 0; width:100%; height:68px; flex-direction:row;
+    justify-content:center; padding:6px 12px; border-right:0;
+    border-top:1px solid var(--border);
+  }
+  .rail-action { width:min(30%,100px); min-height:54px; }
+  .user-chat-app .chat-header { padding:12px 14px; }
+  .composer-wrap { bottom:68px; }
+}
