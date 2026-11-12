@@ -39,6 +39,12 @@ class WebsiteTests(unittest.TestCase):
  def test_seven_color_palette(self):
   css=(ROOT/"css/settings.css").read_text()
   for x in ("purple","blue","teal","green","gold","pink","orange"):self.assertIn(x,css)
+ def test_chat_does_not_expose_admin_only_controls_or_requests(self):
+  for marker in ("Host Performance Monitor","Loaded Model Resource Manager","Local Model Recovery Assistant","metricCpu","admin/overview"):
+   self.assertNotIn(marker,self.html)
+  health=(ROOT/"js/model-health.js").read_text()
+  for endpoint in ("/tamanna-ai/system/metrics","/tamanna-ai/model/resources","/tamanna-ai/model/recovery"):
+   self.assertNotIn(endpoint,health)
  def test_admin_preview_safe(self):
   js=(ROOT/"js/admin.js").read_text();self.assertIn("/api/admin/overview",js);self.assertIn("setPreview",js);self.assertIn("Access denied",js)
  def test_pwa_shell(self):
