@@ -563,9 +563,6 @@
         set("healthKnowledgeDetail", "Private index শুধু account owner দেখতে পারবেন");
       }
       updated.textContent = "সর্বশেষ পরীক্ষা: " + new Date().toLocaleString();
-      await refreshMetrics();
-      await refreshModelResources();
-      await refreshModelRecovery();
     } catch (error) {
       set("healthChatStatus", "Unavailable");
       set("healthChatDetail", error.message);
@@ -699,9 +696,6 @@
 
   refreshButton.addEventListener("click", refresh);
   $("openSettings")?.addEventListener("click", refresh);
-  window.setInterval(() => {
-    if (document.visibilityState === "visible") refreshMetrics();
-  }, 15000);
   window.addEventListener("tamanna:authenticated", refresh);
   window.addEventListener("tamanna:authenticated", refreshBenchmarkHistory);
   window.addEventListener("tamanna:loggedout", () => {
