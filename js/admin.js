@@ -43,8 +43,20 @@ async function connect(){
 }
 logout.addEventListener("click",async()=>{
   logout.disabled=true;
-  try{await fetch("/api/auth/logout",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:"{}"});}
-  finally{logout.hidden=true;logout.disabled=false;banner.textContent="Signed out. Administrator session ended.";banner.classList.add("error");status.textContent="Signed out";status.classList.remove("online");$("adminContent").hidden=true;}
+  try{
+    const response=await fetch("/api/auth/logout",{method:"POST",credentials:"same-origin",headers:{Accept:"application/json"}});
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok||data.ok!==true)throw new Error(data.detail||("HTTP "+response.status));
+    logout.hidden=true;
+    banner.textContent="Signed out. Administrator session ended.";
+    banner.classList.add("error");
+    status.textContent="Signed out";
+    status.classList.remove("online");
+    $("adminContent").hidden=true;
+  }catch(error){
+    banner.textContent="Sign out failed. Your session may still be active. "+(error.message||"Please retry.");
+    banner.classList.add("error");
+  }finally{logout.disabled=false;}
 });
 const auditButton=$("runEthicalAudit"),auditStatus=$("ethicalAuditStatus"),auditReport=$("ethicalAuditReport");
 if(auditButton&&auditStatus&&auditReport){
