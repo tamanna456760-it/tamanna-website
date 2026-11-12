@@ -14,7 +14,10 @@ class WebsiteTests(unittest.TestCase):
   self.html=(ROOT/"index.html").read_text();self.admin=(ROOT/"admin/index.html").read_text();self.parser=Parser();self.parser.feed(self.html)
  def test_chat_panel_is_homepage(self):
   for x in ("chatBox","messageInput","sendButton","authPanel","settingsPanel"):self.assertIn(x,self.parser.ids)
-  self.assertIn("admin/",self.parser.links)
+  self.assertFalse(any("admin" in link.lower() for link in self.parser.links))
+  self.assertIn("chat-side-rail",self.html)
+  self.assertNotIn("Open User Chat",self.admin)
+  self.assertNotIn('href="../"',self.admin)
  def test_admin_panel_is_published(self):
   self.assertIn("Admin Dashboard",self.admin);self.assertIn("../js/admin.js",self.admin);self.assertIn("../css/admin.css",self.admin)
   self.assertIn("PREVIEW MODE",(ROOT/"js/admin.js").read_text())
