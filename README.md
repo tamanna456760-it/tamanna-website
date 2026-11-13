@@ -4,8 +4,8 @@
 
 The previous standalone workspace homepage has been replaced with the Chat Panel from [Tamanna-](https://github.com/tamanna456760-it/Tamanna-). The Admin Control Center is available at `/admin/`. The official logo already used by this website repository is retained.
 
-The Bengali Chat Panel sends guest messages to the configured FastAPI `POST /api/chat` endpoint at `https://www.bd-king-r7.com`. It includes a browser-tab conversation ID and recent context so guest chats can continue without login. The backend must allow the exact GitHub Pages origin in `TAMANNA_CORS_ORIGINS`; guest chat uses no cross-site cookies. Account login/history and the Admin panel still require the backend on the same origin because they use secure HttpOnly cookies. The Admin panel uses `GET /api/admin/overview` and `POST /api/auth/logout`. No Gemini, GPT or hosted model API is used.
+The Bengali Chat Panel now runs in **API-free local knowledge mode**. Questions are processed in the browser and matched against `assets/tamanna-knowledge.json`; chat history is stored in that browser's local storage. No question is sent to FastAPI, Gemini, GPT, or another hosted model API. This is local retrieval, not a full generative LLM: when an answer is absent from the knowledge file, the assistant says so instead of guessing. Add entries to the JSON knowledge file to expand its coverage.
 
-**GitHub Pages is static hosting.** It serves the UI only; it does not host the FastAPI server or local Ollama model. The API host must be deployed and reachable over HTTPS before live AI replies work. Without that backend the Admin panel shows Preview Mode; it does not fake admin access or statistics.
+**GitHub Pages is static hosting.** It can serve the UI and local knowledge file, but cannot run a Python server or Ollama. A full generative model without an API would require downloading and running a compatible browser-side model (WebGPU/WebAssembly), which is a separate, larger feature. The Admin panel remains Preview Mode without a trusted backend.
 
 **Owner:** HM INSAN ALI
