@@ -94,6 +94,8 @@
     }
   }
 
+  const knowledgeReady = loadKnowledge();
+
   async function sendMessage() {
     const prompt = input.value.trim();
     if (!prompt || busy) return;
@@ -103,6 +105,7 @@
     input.value = "";
     input.style.height = "auto";
     add("user", prompt);
+    await knowledgeReady;
     const answer = localAnswer(prompt);
     add("assistant", answer);
     turns.push({role:"user",content:prompt},{role:"assistant",content:answer});
