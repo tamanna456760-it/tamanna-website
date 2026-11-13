@@ -25,7 +25,7 @@ class WebsiteTests(unittest.TestCase):
   for x in self.parser.assets:
    if x.startswith(("http:","https:","#")):continue
    self.assertTrue((ROOT/x.split("?",1)[0]).is_file(),x)
-  for x in ("css/style.css","css/settings.css","css/auth.css","css/admin.css","js/auth.js","js/chat.js","js/admin.js","js/settings.js","js/memories.js","js/knowledge.js","js/model-health.js","assets/tamanna-ai-official-logo.jpg","manifest.webmanifest"):
+  for x in ("css/style.css","css/settings.css","css/auth.css","css/admin.css","js/auth.js","js/chat.js","js/admin.js","js/settings.js","js/memories.js","js/knowledge.js","js/model-health.js","pwa.js","assets/tamanna-ai-official-logo.jpg","manifest.webmanifest"):
    self.assertTrue((ROOT/x).is_file(),x)
  def test_relative_paths(self):
   for p in (self.html,self.admin):
@@ -61,5 +61,5 @@ class WebsiteTests(unittest.TestCase):
  def test_admin_preview_safe(self):
   js=(ROOT/"js/admin.js").read_text();self.assertIn("/api/admin/overview",js);self.assertIn("setPreview",js);self.assertIn("Access denied",js)
  def test_pwa_shell(self):
-  sw=(ROOT/"sw.js").read_text();self.assertIn("tamanna-ai-shell-v8",sw);self.assertIn("./admin/",sw);self.assertNotIn("./app.js",sw)
+  sw=(ROOT/"sw.js").read_text();self.assertIn("tamanna-ai-shell-v9",sw);self.assertIn("pwa.js?v=20261113_pwa1",self.html);self.assertIn("./admin/",sw);self.assertNotIn("./app.js",sw)
 if __name__=="__main__":unittest.main(verbosity=2)
