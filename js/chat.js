@@ -1,229 +1,147 @@
-/* Tamanna AI guest-first chat. Login is optional; guest turns stay in this browser tab. */
+/* Tamanna AI — API-free, browser-local knowledge chat.
+ * No fetch to AI endpoints. Answers are retrieved from the static knowledge file.
+ */
 (() => {
   "use strict";
-
   const $ = (id) => document.getElementById(id);
-  const input = $("messageInput");
-  const send = $("sendButton");
-  const box = $("chatBox");
-  const newChat = $("newChatButton");
-  const select = $("conversationSelect");
-  const remove = $("deleteConversationButton");
-
+  const input = $("messageInput"), send = $("sendButton"), box = $("chatBox");
   if (!input || !send || !box) return;
 
-  const configuredBase = (
-    document.querySelector('meta[name="tamanna-api-base"]')?.content ||
-    window.TAMANNA_API_BASE ||
-    ""
-  ).trim();
-  const apiBase = configuredBase.replace(/\/+$/, "");
-  const apiUrl = (path) => apiBase + path;
-  const isGitHubPages = /(^|\.)github\.io$/i.test(window.location.hostname);
-  const isCrossOrigin = Boolean(apiBase) && new URL(apiBase, window.location.href).origin !== window.location.origin;
-  const requestCredentials = isCrossOrigin ? "omit" : "same-origin";
-  const storageKey = "tamanna.guest.chat.v1";
-
-  let busy = false;
-  let conversationId = "";
+  const STORAGE_KEY = "tamanna.local.chat.v1";
+  const KNOWLEDGE_URL = "assets/tamanna-knowledge.json";
+  const STOP = new Set(["আমি","আমার","তুমি","আপনি","এবং","কী","কি","কেন","কিভাবে","হয়","হবে","হয়","একটা","এই","the","a","an","is","are","to","of","and","what","how","why","you","your","i"]);
+  let entries = [];
   let turns = [];
+  let busy = false;
 
-  function makeId() {
-    return window.crypto?.randomUUID
-      ? window.crypto.randomUUID().replace(/-/g, "")
-      : "guest" + Date.now().toString(36) + Math.random().toString(36).slice(2);
-  }
-
-  function restoreGuestSession() {
-    try {
-      const saved = JSON.parse(sessionStorage.getItem(storageKey) || "{}");
-      conversationId = typeof saved.conversationId === "string" ? saved.conversationId : "";
-      turns = Array.isArray(saved.turns)
-        ? saved.turns.filter((turn) =>
-            turn && ["user", "assistant"].includes(turn.role) &&
-            typeof turn.content === "string"
-          ).slice(-20)
-        : [];
-    } catch (_) {
-      conversationId = "";
-      turns = [];
-    }
-    if (!conversationId) conversationId = makeId();
-  }
-
-  function saveGuestSession() {
-    try {
-      sessionStorage.setItem(storageKey, JSON.stringify({
-        conversationId,
-        turns: turns.slice(-20)
-      }));
-    } catch (_) {
-      // Chat remains usable for the current page even when storage is unavailable.
-    }
-  }
-
-  async function api(path, options = {}) {
-    const response = await fetch(apiUrl(path), {
-      credentials: requestCredentials,
-      ...options,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        ...(options.headers || {})
-      }
-    });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      const detail = typeof data.detail === "string"
-        ? data.detail
-        : data.detail?.message || data.message;
-      const error = new Error(detail || "HTTP " + response.status);
-      error.status = response.status;
-      throw error;
-    }
-    return data;
+  function tokens(value) {
+    return String(value || "").toLocaleLowerCase()
+      .normalize("NFKC")
+      .replace(/[^\p{L}\p{N}]+/gu, " ")
+      .split(/\s+/)
+      .filter(word => word.length > 1 && !STOP.has(word));
   }
 
   function add(role, value) {
-    const element = document.createElement("div");
-    element.className = "message " + (role === "user" ? "user-message" : "ai-message");
-
+    const item = document.createElement("div");
+    item.className = "message " + (role === "user" ? "user-message" : "ai-message");
     const name = document.createElement("div");
     name.className = "message-name";
-    name.textContent = role === "user" ? "আপনি" : "Tamanna AI";
-
+    name.textContent = role === "user" ? "আপনি" : "Tamanna AI · Local";
     const body = document.createElement("div");
     body.className = "message-text";
     body.textContent = String(value ?? "");
-
-    element.append(name, body);
-    box.append(element);
+    item.append(name, body);
+    box.append(item);
     box.scrollTop = box.scrollHeight;
-    return element;
+    return item;
   }
 
-  function renderSavedTurns() {
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(turns.slice(-60))); } catch (_) {}
+  }
+
+  function restore() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      turns = Array.isArray(saved) ? saved.filter(x =>
+        x && ["user","assistant"].includes(x.role) && typeof x.content === "string"
+      ).slice(-60) : [];
+    } catch (_) { turns = []; }
     box.replaceChildren();
     if (!turns.length) {
-      add("assistant", "আমি Tamanna AI। কীভাবে সাহায্য করতে পারি?");
-      return;
+      add("assistant", "হ্যালো! আমি Tamanna AI-এর API-free local assistant। আমি এই ওয়েবসাইটের স্থানীয় জ্ঞানভান্ডার থেকে উত্তর খুঁজি।");
+    } else {
+      turns.forEach(x => add(x.role, x.content));
     }
-    turns.forEach((turn) => add(turn.role, turn.content));
   }
 
-  async function history() {
-    if (!window.TamannaAuth?.getUser()) return;
+  function scoreEntry(queryTokens, entry) {
+    const words = new Set(tokens([entry.title, ...(entry.keywords || []), entry.answer].join(" ")));
+    let score = 0;
+    queryTokens.forEach(word => {
+      if (words.has(word)) score += 1;
+      if ((entry.keywords || []).some(k => String(k).toLocaleLowerCase().includes(word))) score += 2;
+    });
+    const query = queryTokens.join(" ");
+    if (query && (entry.keywords || []).some(k => String(k).toLocaleLowerCase() === query)) score += 5;
+    return score;
+  }
+
+  function localAnswer(prompt) {
+    const q = prompt.trim().toLocaleLowerCase();
+    if (/^(ধন্যবাদ|thanks|thank you|অনেক ধন্যবাদ)[!.\s]*$/i.test(q))
+      return "আপনাকে স্বাগতম! Tamanna AI-এর স্থানীয় জ্ঞানভান্ডারে আর কোনো প্রশ্ন থাকলে করতে পারেন।";
+    if (/^(বিদায়|বিদায়|bye|goodbye)[!.\s]*$/i.test(q))
+      return "আবার কথা হবে! আপনার local chat history এই browser-এ সংরক্ষিত থাকবে।";
+    const queryTokens = tokens(q);
+    if (!queryTokens.length) return "একটু বিস্তারিত লিখুন—আমি স্থানীয় জ্ঞানভান্ডারে মিলিয়ে দেখব।";
+    const ranked = entries.map(entry => ({entry, score:scoreEntry(queryTokens, entry)}))
+      .sort((a,b) => b.score - a.score);
+    if (ranked.length && ranked[0].score >= 2) return ranked[0].entry.answer;
+    return "এই প্রশ্নের নির্ভরযোগ্য উত্তর এখনো আমার local knowledge file-এ নেই। API ছাড়া এই সংস্করণে আমি অনুমান করে উত্তর দেব না। জ্ঞানভান্ডারে তথ্য যোগ করলে সেই বিষয়েও উত্তর দিতে পারব।";
+  }
+
+  async function loadKnowledge() {
     try {
-      const data = await api("/api/history");
-      box.replaceChildren();
-      (Array.isArray(data.history) ? data.history : []).forEach((pair) => {
-        if (pair.user !== undefined) add("user", pair.user);
-        if (pair.assistant !== undefined) add("assistant", pair.assistant);
-      });
-      if (!box.children.length) add("assistant", "আমি Tamanna AI। কীভাবে সাহায্য করতে পারি?");
-    } catch (error) {
-      add("assistant", "আগের কথোপকথন লোড করা যায়নি: " + error.message);
+      const response = await fetch(KNOWLEDGE_URL, {cache:"no-cache"});
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      const data = await response.json();
+      entries = Array.isArray(data.entries) ? data.entries : [];
+    } catch (_) {
+      entries = [];
+      add("assistant", "স্থানীয় জ্ঞানভান্ডার লোড হয়নি। assets/tamanna-knowledge.json ফাইলটি প্রকাশিত হয়েছে কি না পরীক্ষা করুন।");
     }
-  }
-
-  function explainConnectionError(error) {
-    if (error.status === 405 || error.status === 404) {
-      return "AI API endpoint পাওয়া যায়নি (HTTP " + error.status + ")। GitHub Pages static hosting API চালায় না। API URL হিসেবে https://www.bd-king-r7.com সেট করুন এবং একই origin-এ Tamanna FastAPI server deploy করুন।";
-    }
-    if (error instanceof TypeError) {
-      return "Tamanna AI server-এ সংযোগ করা যায়নি। API server চালু আছে কি না, API URL, HTTPS এবং backend CORS allowlist-এ এই website origin আছে কি না পরীক্ষা করুন।";
-    }
-    return "AI server উত্তর দিতে পারেনি (" + error.message + ")। Backend health এবং local model runtime পরীক্ষা করুন।";
   }
 
   async function sendMessage() {
     const prompt = input.value.trim();
     if (!prompt || busy) return;
-
-    add("user", prompt);
-    input.value = "";
-    input.style.height = "auto";
     busy = true;
     send.disabled = true;
     send.textContent = "…";
-
-    const waiting = add("assistant", "Tamanna AI উত্তর তৈরি করছে…");
-    const previousTurns = turns.slice(-10);
-
-    try {
-      const data = await api("/api/chat", {
-        method: "POST",
-        body: JSON.stringify({
-          message: prompt,
-          conversation_id: conversationId,
-          context: previousTurns
-        })
-      });
-
-      const answer = data.reply ?? data.response ?? data.answer;
-      if (typeof answer !== "string" || !answer.trim()) {
-        throw new Error("সার্ভার থেকে খালি বা অচেনা response এসেছে।");
-      }
-
-      waiting.querySelector(".message-text").textContent = answer;
-      turns.push({ role: "user", content: prompt }, { role: "assistant", content: answer });
-      turns = turns.slice(-20);
-      saveGuestSession();
-    } catch (error) {
-      const text = waiting.querySelector(".message-text");
-      text.textContent = explainConnectionError(error);
-      text.classList.add("tamanna-error");
-    } finally {
-      busy = false;
-      send.disabled = false;
-      send.textContent = "↑";
-      input.focus();
-      box.scrollTop = box.scrollHeight;
-    }
+    input.value = "";
+    input.style.height = "auto";
+    add("user", prompt);
+    const answer = localAnswer(prompt);
+    add("assistant", answer);
+    turns.push({role:"user",content:prompt},{role:"assistant",content:answer});
+    turns = turns.slice(-60);
+    save();
+    busy = false;
+    send.disabled = false;
+    send.textContent = "↑";
+    input.focus();
   }
-
-  restoreGuestSession();
-  renderSavedTurns();
 
   send.addEventListener("click", sendMessage);
-  newChat?.addEventListener("click", () => {
-    conversationId = makeId();
-    turns = [];
-    saveGuestSession();
-    renderSavedTurns();
-    input.value = "";
-    input.focus();
-  });
-
-  if (select) {
-    select.disabled = true;
-    select.title = "অ্যাকাউন্টে লগইন করার পর সংরক্ষিত কথোপকথন দেখানো হবে।";
-  }
-  if (remove) {
-    remove.disabled = true;
-    remove.title = "এই API সংস্করণে conversation delete endpoint নেই।";
-  }
-
-  input.addEventListener("input", () => {
-    input.style.height = "auto";
-    input.style.height = Math.min(input.scrollHeight, 180) + "px";
-  });
-  input.addEventListener("keydown", (event) => {
+  input.addEventListener("keydown", event => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       sendMessage();
     }
   });
-
-  window.addEventListener("tamanna:authenticated", history);
-  window.addEventListener("tamanna:loggedout", () => {
+  input.addEventListener("input", () => {
+    input.style.height = "auto";
+    input.style.height = Math.min(input.scrollHeight, 180) + "px";
+  });
+  $("newChatButton")?.addEventListener("click", () => {
+    turns = [];
+    save();
     box.replaceChildren();
-    add("assistant", "আপনি লগআউট করেছেন। Guest হিসেবে নতুন চ্যাট করতে পারেন।");
+    add("assistant", "নতুন local chat শুরু হয়েছে। কী জানতে চান?");
+    input.value = "";
+    input.focus();
   });
 
-  if (window.TamannaAuth?.getUser()) history();
-
-  if (isGitHubPages && !apiBase) {
-    console.warn("[Tamanna AI] GitHub Pages requires a separately hosted API base URL.");
+  const select = $("conversationSelect");
+  if (select) {
+    select.disabled = true;
+    select.title = "Local mode-এ browser-এর বর্তমান chat history রাখা হয়; server conversation list নেই।";
   }
+  const remove = $("deleteConversationButton");
+  if (remove) remove.disabled = true;
+
+  restore();
+  loadKnowledge();
 })();
