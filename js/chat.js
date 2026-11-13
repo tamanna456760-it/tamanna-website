@@ -68,11 +68,11 @@
 
   function localAnswer(prompt) {
     const q = prompt.trim().toLocaleLowerCase();
-    if (/^(হ্যালো|হ্যালোও|হাই|সালাম|আসসালামু আলাইকুম|hello|hi|hey)[!.\\s]*$/i.test(q))
+    if (/^(হ্যালো|হ্যালোও|হাই|সালাম|আসসালামু আলাইকুম|hello|hi|hey)[!.\s]*$/i.test(q))
       return "ওয়ালাইকুম আসসালাম! হ্যালো। কী বিষয়ে সাহায্য করতে পারি?";
-    if (/^(ধন্যবাদ|thanks|thank you|অনেক ধন্যবাদ)[!.\\s]*$/i.test(q))
+    if (/^(ধন্যবাদ|thanks|thank you|অনেক ধন্যবাদ)[!.\s]*$/i.test(q))
       return "আপনাকে স্বাগতম! আর কোনো প্রশ্ন থাকলে করুন।";
-    if (/^(বিদায়|বিদায়|bye|goodbye)[!.\\s]*$/i.test(q))
+    if (/^(বিদায়|বিদায়|bye|goodbye)[!.\s]*$/i.test(q))
       return "আবার কথা হবে! আপনার local chat history এই browser-এ সংরক্ষিত থাকবে।";
     if (knowledgeError) return "দুঃখিত, স্থানীয় জ্ঞানভান্ডারটি লোড করা যায়নি। পেজটি refresh করুন; সমস্যা থাকলে assets/tamanna-knowledge.json প্রকাশিত হয়েছে কি না পরীক্ষা করতে হবে।";
     const queryTokens = tokens(q);
