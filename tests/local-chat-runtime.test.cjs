@@ -68,7 +68,22 @@ async function run() {
   assert.equal(elements.sendButton.disabled, false);
   assert.equal(elements.messageInput.value, "");
   assert.ok(storage.has("tamanna.local.chat.v1"));
-  console.log("PASS: local knowledge loads, send click renders an answer, button recovers, and chat history persists.");
+
+  elements.messageInput.value = "unknown topic";
+  let enterPrevented = false;
+  elements.messageInput.listeners.keydown({
+    key: "Enter",
+    shiftKey: false,
+    isComposing: false,
+    preventDefault() { enterPrevented = true; }
+  });
+  await new Promise(resolve => setImmediate(resolve));
+  const afterEnter = elements.chatBox.children.map(node => node.children.map(child => child.textContent).join(" ")).join("\\n");
+  assert.equal(enterPrevented, true);
+  assert.match(afterEnter, /local knowledge file/);
+  assert.equal(elements.sendButton.disabled, false);
+
+  console.log("PASS: local knowledge loads, Send and Enter both produce visible replies, unknown topics get a fallback, and chat history persists.");
 }
 
 run().catch(error => {
