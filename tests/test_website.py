@@ -30,9 +30,13 @@ class WebsiteTests(unittest.TestCase):
  def test_relative_paths(self):
   for p in (self.html,self.admin):
    self.assertNotIn('href="/assets/',p);self.assertNotIn('src="/js/',p);self.assertNotIn('href="/css/',p)
- def test_fastapi_chat_contract(self):
-  js=(ROOT/"js/chat.js").read_text().replace(" ","")
-  self.assertIn('"/api/chat"',js);self.assertIn("tamanna-api-base", (ROOT/"index.html").read_text());self.assertIn("https://www.bd-king-r7.com", (ROOT/"index.html").read_text());self.assertIn('JSON.stringify({',js);self.assertIn('conversation_id:conversationId',js);self.assertIn('context:previousTurns',js);self.assertIn('"/api/history"',js);self.assertNotIn("/tamanna-ai",js)
+ def test_api_free_local_chat(self):
+  js=(ROOT/"js/chat.js").read_text();html=(ROOT/"index.html").read_text();sw=(ROOT/"sw.js").read_text()
+  self.assertIn("tamanna.local.chat.v1",js);self.assertIn("assets/tamanna-knowledge.json",js);self.assertIn("localAnswer",js)
+  self.assertNotIn("/api/chat",js);self.assertNotIn("fetch(apiUrl",js);self.assertNotIn("tamanna-api-base",html)
+  self.assertIn("./assets/tamanna-knowledge.json",sw)
+  data=__import__("json").loads((ROOT/"assets/tamanna-knowledge.json").read_text())
+  self.assertGreaterEqual(len(data["entries"]),8)
  def test_no_hosted_model_api(self):
   text=(self.html+(ROOT/"js/chat.js").read_text()).lower()
   self.assertNotIn("generativelanguage.googleapis.com",text);self.assertNotIn("api.openai.com",text)
@@ -44,8 +48,8 @@ class WebsiteTests(unittest.TestCase):
   chat=(ROOT/"js/chat.js").read_text()
   self.assertIn("api(\"/me\").then(result => {",auth)
   self.assertIn("new CustomEvent(\"tamanna:authenticated\"",auth)
-  self.assertIn("addEventListener(\"tamanna:authenticated\",history)",chat)
-  self.assertIn("api(\"/api/history\")",chat)
+  self.assertNotIn("addEventListener(\"tamanna:authenticated\",history)",chat)
+  self.assertNotIn("api(\"/api/history\")",chat)
  def test_chat_does_not_expose_admin_only_controls_or_requests(self):
   for marker in ("Host Performance Monitor","Loaded Model Resource Manager","Local Model Recovery Assistant","metricCpu","admin/overview"):
    self.assertNotIn(marker,self.html)
@@ -57,5 +61,5 @@ class WebsiteTests(unittest.TestCase):
  def test_admin_preview_safe(self):
   js=(ROOT/"js/admin.js").read_text();self.assertIn("/api/admin/overview",js);self.assertIn("setPreview",js);self.assertIn("Access denied",js)
  def test_pwa_shell(self):
-  sw=(ROOT/"sw.js").read_text();self.assertIn("tamanna-ai-shell-v4",sw);self.assertIn("./admin/",sw);self.assertNotIn("./app.js",sw)
+  sw=(ROOT/"sw.js").read_text();self.assertIn("tamanna-ai-shell-v5",sw);self.assertIn("./admin/",sw);self.assertNotIn("./app.js",sw)
 if __name__=="__main__":unittest.main(verbosity=2)
