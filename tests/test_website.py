@@ -57,5 +57,5 @@ class WebsiteTests(unittest.TestCase):
  def test_admin_preview_safe(self):
   js=(ROOT/"js/admin.js").read_text();self.assertIn("/api/admin/overview",js);self.assertIn("setPreview",js);self.assertIn("Access denied",js)
  def test_pwa_shell(self):
-  sw=(ROOT/"sw.js").read_text();self.assertIn("tamanna-ai-shell-v3",sw);self.assertIn("./admin/",sw);self.assertNotIn("./app.js",sw)
+  sw=(ROOT/"sw.js").read_text();self.assertIn("tamanna-ai-shell-v4",sw);self.assertIn("./admin/",sw);self.assertNotIn("./app.js",sw)
 if __name__=="__main__":unittest.main(verbosity=2)
