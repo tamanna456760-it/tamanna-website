@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "mode": "local-retrieval",
+  "entries": [
+    {
+      "id": "identity",
+      "title": "Tamanna AI পরিচিতি",
+      "keywords": [
+        "tamanna ai",
+        "তামান্না এআই",
+        "তুমি কে",
+        "who are you",
+        "পরিচয়"
+      ],
+      "answer": "আমি Tamanna AI—এই ওয়েবসাইটের স্থানীয় জ্ঞানভিত্তিক সহকারী। এই সংস্করণে কোনো external AI API বা remote model-এ প্রশ্ন পাঠানো হয় না। আমি এই সাইটে থাকা জ্ঞানভান্ডার থেকে মিলিয়ে উত্তর দিই।"
+    },
+    {
+      "id": "api-free",
+      "title": "API ছাড়া Chat",
+      "keywords": [
+        "api ছাড়া",
+        "without api",
+        "offline",
+        "লোকাল",
+        "local chat",
+        "ইন্টারনেট ছাড়া"
+      ],
+      "answer": "এই Chat Panel API ছাড়াই কাজ করতে পারে: প্রশ্ন আপনার ব্রাউজারেই থাকে এবং এই ওয়েবসাইটের সঙ্গে থাকা static knowledge file থেকে উত্তর খোঁজা হয়। তবে এটি এখনো পূর্ণ generative AI model নয়; জ্ঞানভান্ডারে উত্তর না থাকলে তা জানিয়ে দেবে।"
+    },
+    {
+      "id": "github-pages",
+      "title": "GitHub Pages সীমাবদ্ধতা",
+      "keywords": [
+        "github pages",
+        "গিটহাব পেজ",
+        "hosting",
+        "হোস্টিং"
+      ],
+      "answer": "GitHub Pages static HTML, CSS, JavaScript ও JSON ফাইল পরিবেশন করে। এটি নিজে Python/FastAPI server বা বড় language model চালায় না। তাই API ছাড়া এখানে retrieval-ভিত্তিক local chat চালানো যায়; পূর্ণ LLM চালাতে browser-এ model download করে WebGPU/WebAssembly inference যোগ করতে হবে।"
+    },
+    {
+      "id": "privacy",
+      "title": "গোপনীয়তা",
+      "keywords": [
+        "privacy",
+        "গোপনীয়তা",
+        "ডেটা",
+        "data",
+        "প্রশ্ন কোথায় যায়"
+      ],
+      "answer": "API-free local mode-এ আপনার প্রশ্ন কোনো backend API-তে পাঠানো হয় না। কথোপকথন এই browser-এর local storage-এ রাখা হয়। Shared device হলে browser storage পরিষ্কার করুন।"
+    },
+    {
+      "id": "memory",
+      "title": "Local chat memory",
+      "keywords": [
+        "memory",
+        "মেমোরি",
+        "আগের কথা",
+        "conversation history",
+        "ইতিহাস"
+      ],
+      "answer": "এই browser-এ local chat history রাখা যায়, যাতে একই browser-এ পরে এলে আগের কথোপকথন দেখা যায়। এটি server account sync নয়; browser data মুছে ফেললে history-ও মুছে যাবে।"
+    },
+    {
+      "id": "admin",
+      "title": "Admin Panel",
+      "keywords": [
+        "admin",
+        "অ্যাডমিন",
+        "dashboard",
+        "ড্যাশবোর্ড"
+      ],
+      "answer": "Tamanna Admin আলাদা /admin/ পেজে আছে। বর্তমান static Pages সংস্করণে live server-backed admin তথ্যের বদলে Preview Mode দেখাতে পারে। নিরাপদ admin login ও live controls-এর জন্য trusted backend প্রয়োজন।"
+    },
+    {
+      "id": "languages",
+      "title": "ভাষা",
+      "keywords": [
+        "বাংলা",
+        "bangla",
+        "english",
+        "হিন্দি",
+        "hindi",
+        "arabic",
+        "আরবি",
+        "language",
+        "ভাষা"
+      ],
+      "answer": "Tamanna AI-এর লক্ষ্য বাংলা, English, Hindi ও Arabic সমর্থন করা। এই local knowledge সংস্করণে উত্তরগুলো প্রধানত বাংলায়; সম্পূর্ণ multilingual answer generation এখনো যুক্ত হয়নি।"
+    },
+    {
+      "id": "model",
+      "title": "Local AI model",
+      "keywords": [
+        "model",
+        "মডেল",
+        "ollama",
+        "llm",
+        "language model",
+        "qwen"
+      ],
+      "answer": "পূর্ণ API-free generative AI চালাতে local model দরকার। GitHub Pages-এ server-side Ollama চালানো যায় না। Browser-side WebGPU model ব্যবহার করতে হলে model weights download, browser compatibility এবং device RAM/GPU পরীক্ষা করতে হবে।"
+    },
+    {
+      "id": "contact",
+      "title": "সাহায্য ও জ্ঞান যোগ করা",
+      "keywords": [
+        "help",
+        "সাহায্য",
+        "কীভাবে",
+        "knowledge",
+        "জ্ঞান",
+        "নতুন তথ্য"
+      ],
+      "answer": "এই local chat-এর knowledge বাড়াতে assets/tamanna-knowledge.json ফাইলে নতুন entry যোগ করতে হবে। প্রতিটি entry-তে id, title, keywords এবং answer রাখুন। তারপর GitHub main branch-এ commit করলে Pages redeploy হবে।"
+    },
+    {
+      "id": "greeting",
+      "title": "শুভেচ্ছা",
+      "keywords": [
+        "হ্যালো",
+        "হাই",
+        "hello",
+        "hi",
+        "আসসালামু আলাইকুম",
+        "সালাম"
+      ],
+      "answer": "হ্যালো! আমি Tamanna AI-এর API-free local assistant। আপনি Tamanna AI, GitHub Pages, local chat বা এই জ্ঞানভান্ডার সম্পর্কে প্রশ্ন করতে পারেন।"
+    }
+  ]
+}
