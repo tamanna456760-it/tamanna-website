@@ -32,7 +32,7 @@ class WebsiteTests(unittest.TestCase):
    self.assertNotIn('href="/assets/',p);self.assertNotIn('src="/js/',p);self.assertNotIn('href="/css/',p)
  def test_api_free_local_chat(self):
   js=(ROOT/"js/chat.js").read_text();html=(ROOT/"index.html").read_text();sw=(ROOT/"sw.js").read_text()
-  self.assertIn("tamanna.local.chat.v1",js);self.assertIn("assets/tamanna-knowledge.json",js);self.assertIn("localAnswer",js)
+  self.assertIn("tamanna.local.chat.v1",js);self.assertIn("assets/tamanna-knowledge.json",js);self.assertIn("localAnswer",js);self.assertIn("finally:",js);self.assertIn("aria-busy",js);self.assertEqual(js.count("loadKnowledge()"),2) # function declaration plus one invocation
   self.assertNotIn("/api/chat",js);self.assertNotIn("fetch(apiUrl",js);self.assertNotIn("tamanna-api-base",html)
   self.assertIn("./assets/tamanna-knowledge.json",sw)
   data=__import__("json").loads((ROOT/"assets/tamanna-knowledge.json").read_text())
