@@ -33,6 +33,8 @@ jobs:
           node --check js/chat.js
           node --check js/auth.js
           node --check js/admin.js
+          node --check tests/local-chat-runtime.test.cjs
+          node tests/local-chat-runtime.test.cjs
       - name: Run website tests
         run: python -m unittest discover -s tests -v
       - name: Upload Pages artifact
