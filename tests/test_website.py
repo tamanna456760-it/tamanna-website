@@ -32,7 +32,7 @@ class WebsiteTests(unittest.TestCase):
    self.assertNotIn('href="/assets/',p);self.assertNotIn('src="/js/',p);self.assertNotIn('href="/css/',p)
  def test_fastapi_chat_contract(self):
   js=(ROOT/"js/chat.js").read_text().replace(" ","")
-  self.assertIn('"/api/chat"',js);self.assertIn('JSON.stringify({message:prompt})',js);self.assertIn('"/api/history"',js);self.assertNotIn("/tamanna-ai",js)
+  self.assertIn('"/api/chat"',js);self.assertIn("tamanna-api-base", (ROOT/"index.html").read_text());self.assertIn("https://www.bd-king-r7.com", (ROOT/"index.html").read_text());self.assertIn('JSON.stringify({',js);self.assertIn('conversation_id:conversationId',js);self.assertIn('context:previousTurns',js);self.assertIn('"/api/history"',js);self.assertNotIn("/tamanna-ai",js)
  def test_no_hosted_model_api(self):
   text=(self.html+(ROOT/"js/chat.js").read_text()).lower()
   self.assertNotIn("generativelanguage.googleapis.com",text);self.assertNotIn("api.openai.com",text)
