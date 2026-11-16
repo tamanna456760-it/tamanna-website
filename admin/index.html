@@ -1,62 +1,53 @@
 <!doctype html>
 <html lang="bn">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#11172b"><title>Tamanna AI — Admin Control Center</title>
-  <link rel="icon" href="../assets/tamanna-ai-official-logo.jpg" type="image/jpeg"><link rel="stylesheet" href="../css/admin.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1020"><meta name="description" content="Tamanna AI offline-first local administration">
+<title>Tamanna AI — Local Admin</title>
+<link rel="icon" href="../assets/tamanna-ai-official-logo.jpg" type="image/jpeg">
+<link rel="stylesheet" href="../css/admin.css">
 </head>
-<body>
-<header class="admin-topbar"><div class="admin-brand"><img src="../assets/tamanna-ai-official-logo.jpg" alt="Tamanna AI TI Logo"><span><strong>Tamanna AI</strong><small>ADMIN CONTROL CENTER</small></span></div><div class="top-actions"><span id="adminIdentity">Admin workspace</span></div></header>
+<body class="local-admin">
+<header class="admin-topbar"><a class="admin-brand" href="../index.html"><img src="../assets/tamanna-ai-official-logo.jpg" alt="Tamanna AI"><span><strong>Tamanna AI</strong><small>LOCAL ADMIN CONTROL CENTER</small></span></a><div class="top-actions"><span class="status-pill online" id="localMode">● Browser-local mode</span><a class="top-link" href="../index.html">Chat খুলুন ↗</a></div></header>
 <main class="admin-main">
-<section class="welcome"><div><p class="eyebrow">TAMANNA AI / CONTROL CENTER</p><h1>Admin Dashboard</h1><p>এক জায়গা থেকে Tamanna AI-এর সিস্টেম পরিচালনা ও পর্যবেক্ষণ করুন।</p></div><span id="systemStatus" class="status-pill">Checking connection…</span></section>
-<section id="modeBanner" class="access-state" role="status" aria-live="polite">Backend connection যাচাই করা হচ্ছে…</section>
-<section id="adminContent">
-<div class="stats-grid">
-<article class="stat-card"><span>Backend</span><strong id="backendStatus">API Pending</strong><small>FastAPI connection</small></article>
-<article class="stat-card"><span>AI Provider</span><strong id="modelProvider">API Pending</strong><small>Local Ollama / provider status</small></article>
-<article class="stat-card"><span>Environment</span><strong id="environment">API Pending</strong><small>Runtime configuration</small></article>
-<article class="stat-card"><span>Database</span><strong id="database">API Pending</strong><small>SQLite / configured storage</small></article>
-</div>
-<div class="admin-grid">
-<section class="panel-card"><div class="panel-heading"><div><p class="eyebrow">MANAGEMENT</p><h2>Control modules</h2></div><span class="panel-icon">✦</span></div><div class="tool-list">
-<div class="tool-row"><span class="tool-icon">♙</span><div><strong>User Management</strong><small>User list, roles, suspend/restore and account controls.</small></div><span class="tool-state">API Pending</span></div>
-<div class="tool-row"><span class="tool-icon">◈</span><div><strong>AI & API Settings</strong><small>Provider, model, usage limits and connection diagnostics.</small></div><span class="tool-state">API Pending</span></div>
-<div class="tool-row"><span class="tool-icon">⌁</span><div><strong>Memory & Conversations</strong><small>Storage health, retention controls and conversation tools.</small></div><span class="tool-state">API Pending</span></div>
-<div class="tool-row"><span class="tool-icon">⚙</span><div><strong>Application Settings</strong><small>Maintenance mode, feature flags, themes and language defaults.</small></div><span class="tool-state">API Pending</span></div>
-<div class="tool-row"><span class="tool-icon">▤</span><div><strong>Logs & Audit Trail</strong><small>Admin actions, errors, login events and request diagnostics.</small></div><span class="tool-state">API Pending</span></div>
-<div class="tool-row"><span class="tool-icon">⬡</span><div><strong>Security Center</strong><small>2FA, sessions, rate limits, suspicious activity and access policy.</small></div><span class="tool-state">API Pending</span></div>
-<div class="tool-row"><span class="tool-icon">☁</span><div><strong>Server & Deployment</strong><small>Build history, Cloudflare status, backups and deployment checks.</small></div><span class="tool-state">API Pending</span></div>
-<div class="tool-row"><span class="tool-icon">▥</span><div><strong>Analytics & Usage</strong><small>Real user activity, chat volume, latency and quota reporting.</small></div><span class="tool-state">API Pending</span></div>
+<section class="welcome"><div><p class="eyebrow">TAMANNA AI / ADMINISTRATION</p><h1>Admin Control Center</h1><p>Settings, capability overview, local diagnostics এবং ভুলের রিপোর্ট—এক জায়গায়।</p></div><span class="status-pill" id="savedState">Unsaved changes: 0</span></section>
+<section class="access-state preview" role="status"><strong>API-free local mode:</strong> এই panel শুধু এই browser-এর local settings ও logs পরিচালনা করে। এটি server, অন্য device, GitHub, account permissions বা installed model-এ পরিবর্তন করতে পারে না। Browser storage মুছে গেলে local data হারাতে পারে—Export backup রাখুন।</section>
+<div class="local-admin-layout">
+<nav class="local-nav" aria-label="Admin sections">
+<a href="#overview" class="active">▦ Overview</a><a href="#settings">⚙ Settings</a><a href="#capabilities">✦ AI Capabilities</a><a href="#mistakes">⚠ ভুল ও Feedback</a><a href="#diagnostics">⌁ Diagnostics & Logs</a><a href="#data">⇧ Data & Backup</a>
+</nav>
+<div class="local-admin-content">
+<section id="overview" class="panel-card admin-section"><p class="eyebrow">SYSTEM OVERVIEW</p><h2>বর্তমান অবস্থা</h2><div class="stats-grid local-stats">
+<article class="stat-card"><span>Admin mode</span><strong id="overviewMode">Local</strong><small>Browser storage only</small></article>
+<article class="stat-card"><span>Saved settings</span><strong id="settingCount">0</strong><small>Local preferences</small></article>
+<article class="stat-card"><span>Recorded issues</span><strong id="issueCount">0</strong><small>Feedback on this browser</small></article>
+<article class="stat-card"><span>Knowledge file</span><strong id="knowledgeCount">Checking</strong><small>Published static knowledge</small></article>
+</div><div class="inline-actions"><button type="button" class="primary-button" id="refreshOverview">Refresh overview</button><span id="overviewUpdated" class="muted">এখনো refresh হয়নি</span></div></section>
+<section id="settings" class="panel-card admin-section"><p class="eyebrow">APP PREFERENCES</p><h2>Settings পরিচালনা</h2><p class="muted">এখানে পরিবর্তনগুলো এই browser-এ সংরক্ষিত হবে। Chat page-এর settings আলাদা storage ব্যবহার করলে সেগুলো স্বয়ংক্রিয়ভাবে বদলাবে না।</p>
+<form id="settingsForm" class="settings-grid">
+<label>Theme<select name="theme"><option value="dark">Dark</option><option value="light">Light</option><option value="system">System default</option></select></label>
+<label>Accent colour<select name="accent"><option value="violet">Violet</option><option value="blue">Blue</option><option value="teal">Teal</option><option value="green">Green</option><option value="gold">Gold</option><option value="pink">Pink</option><option value="orange">Orange</option></select></label>
+<label>Default language<select name="language"><option value="bn">বাংলা</option><option value="en">English</option><option value="hi">हिन्दी</option><option value="ar">العربية</option></select></label>
+<label>Local model preference<input name="model" maxlength="120" placeholder="যেমন: Ollama model name (তথ্য হিসেবে)"></label>
+<label>Max local chat history<select name="historyLimit"><option value="20">20 messages</option><option value="60">60 messages</option><option value="100">100 messages</option><option value="200">200 messages</option></select></label>
+<label>Knowledge matching threshold<select name="matchThreshold"><option value="1">Low (1)</option><option value="2">Balanced (2)</option><option value="3">Strict (3)</option><option value="5">Very strict (5)</option></select></label>
+<label class="toggle-setting"><input type="checkbox" name="saveLocalHistory"> এই browser-এ chat history রাখুন</label>
+<label class="toggle-setting"><input type="checkbox" name="collectLocalDiagnostics"> এই browser-এ diagnostic errors log করুন</label>
+<div class="form-actions"><button class="primary-button" type="submit">Save settings</button><button class="secondary-button" type="reset">Reset form</button><span id="settingsStatus" class="muted" role="status">Default settings লোড হয়েছে।</span></div>
+</form></section>
+<section id="capabilities" class="panel-card admin-section"><p class="eyebrow">TRANSPARENT CAPABILITY REGISTER</p><h2>Tamanna AI কতটুকু সক্ষম</h2><p class="muted">এই তালিকা website repository-তে দৃশ্যমান feature থেকে তৈরি; এটি live backend বা model health পরীক্ষা নয়।</p><div class="capability-list">
+<div class="capability-row"><div><strong>Browser-local chat UI</strong><small>Message input, send এবং local chat interaction</small></div><span class="tool-state enabled">UI available</span></div>
+<div class="capability-row"><div><strong>Static knowledge retrieval</strong><small>প্রকাশিত JSON knowledge file থেকে keyword matching</small></div><span class="tool-state">Static file</span></div>
+<div class="capability-row"><div><strong>Browser local storage</strong><small>এই browser-এ chat/settings সংরক্ষণ; server sync নয়</small></div><span class="tool-state enabled">Browser only</span></div>
+<div class="capability-row"><div><strong>Local LLM inference</strong><small>এই GitHub Pages site নিজে model চালাতে পারে না; local runtime bridge প্রয়োজন</small></div><span class="tool-state">Not verified</span></div>
+<div class="capability-row"><div><strong>Admin account & user management</strong><small>API/backend ছাড়া নিরাপদ account administration সম্ভব নয়</small></div><span class="tool-state">Unavailable offline</span></div>
+<div class="capability-row"><div><strong>Server, DNS, deployment & APK controls</strong><small>এই static panel থেকে remote infrastructure পরিবর্তন করা হয় না</small></div><span class="tool-state">Not connected</span></div>
 </div></section>
-<section class="panel-card"><div class="panel-heading"><div><p class="eyebrow">ADMIN ACCOUNT</p><h2>Administrator</h2></div></div><p id="adminName" class="admin-name">Tamanna AI Admin</p><p id="adminEmail" class="admin-email">Tamanna456760@gmail.com</p><p class="security-note">Production access must be verified by FastAPI using the private TAMANNA_ADMIN_EMAIL allowlist. Preview mode does not grant administrator privileges or expose account data.</p><button id="adminLogout" class="logout-button" type="button" hidden>Sign out</button>
-</section>
-</div>
-<section class="panel-card ethical-audit-panel" aria-labelledby="ethicalAuditTitle">
-<p class="eyebrow">DEFENSIVE SECURITY</p><h2 id="ethicalAuditTitle">Ethical Hacking</h2>
-<p class="ethical-audit-copy">নিজের Tamanna AI project-এর read-only security audit চালান। এটি configuration, secret-file exclusions এবং legacy safety guards পরীক্ষা করবে; কোনো host scan, exploit বা system change করবে না।</p>
-<div class="ethical-audit-actions"><button id="runEthicalAudit" class="logout-button" type="button">Run Ethical Security Audit</button><span id="ethicalAuditStatus" class="tool-state">Admin verification required</span></div>
-<pre id="ethicalAuditReport" class="ethical-audit-report" role="status" aria-live="polite">Audit এখনো চালানো হয়নি।</pre>
-</section>
-
-<section class="panel-card antivirus-panel" aria-labelledby="antivirusTitle">
-  <p class="eyebrow">MALWARE DEFENSE</p>
-  <h2 id="antivirusTitle">Tamanna AI Antivirus</h2>
-  <p class="ethical-audit-copy">Admin হিসেবে একটি ফাইল আপলোড করে ClamAV দিয়ে scan করুন। ফাইলটি temporary storage-এ scan হবে; সংরক্ষণ বা execute করা হবে না। ClamAV অনুপস্থিত থাকলে scan verified হবে না।</p>
-  <form id="antivirusForm" class="antivirus-form">
-    <label for="antivirusFile">যে ফাইলটি scan করতে চান</label>
-    <input id="antivirusFile" name="file" type="file" required>
-    <button id="antivirusScanButton" class="logout-button" type="submit">Scan uploaded file</button>
-    <span id="antivirusScanStatus" class="tool-state">Admin verification required</span>
-  </form>
-  <pre id="antivirusScanReport" class="ethical-audit-report" role="status" aria-live="polite">এখনো কোনো ফাইল scan করা হয়নি।</pre>
-</section>
-
-<section class="panel-card api-checklist"><p class="eyebrow">IMPLEMENTATION PLAN</p><h2>Backend connection checklist</h2><div class="tool-list">
-<div class="tool-row"><div><strong>Admin authentication & role checks</strong><small>Use existing session cookie and email allowlist; add 2FA before production.</small></div><span class="tool-state">Existing / harden</span></div>
-<div class="tool-row"><div><strong>Overview, users, analytics and audit APIs</strong><small>Read-only endpoints first, then permission-checked actions.</small></div><span class="tool-state">Pending</span></div>
-<div class="tool-row"><div><strong>Settings, deployment and security APIs</strong><small>Validate every action server-side and record it in audit logs.</small></div><span class="tool-state">Pending</span></div>
-</div></section>
-</section>
-</main>
-<script src="../js/admin.js?v=20261112_admin_controls"></script>
+<section id="mistakes" class="panel-card admin-section"><p class="eyebrow">QUALITY & FEEDBACK</p><h2>ভুল উত্তর ও সমস্যা রিপোর্ট</h2><p class="muted">যে ভুল উত্তর পেয়েছেন সেটি এখানে লিখুন। রিপোর্টটি এই browser-এ থাকবে; স্বয়ংক্রিয়ভাবে GitHub বা server-এ পাঠানো হবে না।</p>
+<form id="issueForm" class="issue-form"><label>প্রশ্ন বা ঘটনার বিবরণ<textarea name="prompt" rows="2" maxlength="4000" required placeholder="কী প্রশ্ন করেছিলেন?"></textarea></label><label>Tamanna AI-এর উত্তর / সমস্যাটি<textarea name="answer" rows="3" maxlength="8000" required placeholder="কোন উত্তরটি ভুল ছিল বা কী সমস্যা হয়েছে?"></textarea></label><label>সঠিক উত্তর / প্রত্যাশিত আচরণ<textarea name="expected" rows="3" maxlength="8000" placeholder="সঠিক উত্তর জানা থাকলে লিখুন (ঐচ্ছিক)"></textarea></label><label>Severity<select name="severity"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></label><button class="primary-button" type="submit">Save local report</button><span id="issueStatus" class="muted" role="status"></span></form><div id="issueList" class="issue-list"></div></section>
+<section id="diagnostics" class="panel-card admin-section"><p class="eyebrow">LOCAL DIAGNOSTICS</p><h2>Logs & diagnostics</h2><p class="muted">Admin page-এ ধরা browser JavaScript error এবং আপনার সংরক্ষিত local actions। Server logs বা অন্য tab-এর error এখানে দেখা যায় না।</p><div class="inline-actions"><button id="refreshLogs" class="secondary-button" type="button">Refresh logs</button><button id="clearLogs" class="danger-button" type="button">Clear logs</button></div><pre id="logOutput" class="ethical-audit-report">কোনো log নেই।</pre></section>
+<section id="data" class="panel-card admin-section"><p class="eyebrow">PORTABILITY & RECOVERY</p><h2>Data backup & restore</h2><p class="muted">Admin settings, এই panel-এর issue reports ও local logs JSON হিসেবে export/import করুন। এতে chat history বা private account data অন্তর্ভুক্ত নয়।</p><div class="inline-actions"><button id="exportData" class="primary-button" type="button">Export backup JSON</button><label class="file-button">Import backup JSON<input id="importData" type="file" accept="application/json,.json" hidden></label><button id="resetAdminData" class="danger-button" type="button">Reset admin local data</button></div><p id="backupStatus" class="muted" role="status"></p></section>
+<footer class="admin-footer">Tamanna AI · Offline-first admin UI · Browser-local controls only</footer>
+</div></div></main>
+<script src="../js/admin.js?v=20261116_local_admin"></script>
 </body></html>

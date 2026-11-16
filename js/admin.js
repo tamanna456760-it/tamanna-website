@@ -1,155 +1,26 @@
 (()=>{"use strict";
-const $=id=>document.getElementById(id);
-const banner=$("modeBanner"),status=$("systemStatus"),logout=$("adminLogout");
-function setPreview(reason){
-  banner.textContent="PREVIEW MODE — Admin interface is running without a backend API. Live data and management actions are disabled. "+reason;
-  banner.classList.add("preview");
-  status.textContent="API not connected";
-  status.classList.remove("online");
-  $("adminIdentity").textContent="Offline preview";
-  $("adminName").textContent="Tamanna AI Admin";
-  $("adminEmail").textContent="Backend connection required";
-  logout.hidden=true;
-}
-function setLive(data){
-  const admin=data.admin||{},system=data.system||{};
-  $("adminIdentity").textContent=admin.email||"Administrator";
-  $("adminName").textContent=admin.name||"Administrator";
-  $("adminEmail").textContent=admin.email||"";
-  $("backendStatus").textContent=system.status||"Online";
-  $("modelProvider").textContent=system.model_provider||"Not configured";
-  $("environment").textContent=system.environment||"Unknown";
-  $("database").textContent=system.database||"Not configured";
-  banner.textContent="LIVE MODE — Administrator permission was verified by the backend.";
-  banner.classList.remove("preview","error");
-  status.textContent="● Backend connected";
-  status.classList.add("online");
-  logout.hidden=false;
-}
-async function connect(){
-  try{
-    const response=await fetch("/api/admin/overview",{credentials:"same-origin",headers:{Accept:"application/json"}});
-    const data=await response.json().catch(()=>({}));
-    if(response.status===401||response.status===403){
-      banner.textContent=response.status===401?"Admin sign-in required. Sign in through the dedicated administrator authentication flow.":"Access denied. This signed-in account is not authorized as an administrator.";
-      banner.classList.add("error");status.textContent="Access denied";$("adminContent").hidden=true;return;
-    }
-    if(!response.ok)throw new Error(data.detail||("HTTP "+response.status));
-    if(data.ok!==true||!data.admin)throw new Error("Unexpected API response");
-    setLive(data);
-  }catch(error){
-    setPreview("The API endpoint is not available yet ("+(error.message||"network error")+").");
-  }
-}
-logout.addEventListener("click",async()=>{
-  logout.disabled=true;
-  try{
-    const response=await fetch("/api/auth/logout",{method:"POST",credentials:"same-origin",headers:{Accept:"application/json"}});
-    const data=await response.json().catch(()=>({}));
-    if(!response.ok||data.ok!==true)throw new Error(data.detail||("HTTP "+response.status));
-    logout.hidden=true;
-    banner.textContent="Signed out. Administrator session ended.";
-    banner.classList.add("error");
-    status.textContent="Signed out";
-    status.classList.remove("online");
-    $("adminContent").hidden=true;
-  }catch(error){
-    banner.textContent="Sign out failed. Your session may still be active. "+(error.message||"Please retry.");
-    banner.classList.add("error");
-  }finally{logout.disabled=false;}
-});
-const auditButton=$("runEthicalAudit"),auditStatus=$("ethicalAuditStatus"),auditReport=$("ethicalAuditReport");
-if(auditButton&&auditStatus&&auditReport){
-  auditButton.addEventListener("click",async()=>{
-    auditButton.disabled=true;
-    auditStatus.textContent="Running read-only checks…";
-    auditReport.textContent="Tamanna AI security configuration পরীক্ষা করা হচ্ছে…";
-    try{
-      const response=await fetch("/api/admin/security/ethical-audit",{
-        method:"GET",credentials:"same-origin",headers:{Accept:"application/json"}
-      });
-      const data=await response.json().catch(()=>({}));
-      if(response.status===401||response.status===403){
-        auditStatus.textContent="Admin access required";
-        auditReport.textContent=data.detail||"Administrator permission was not verified.";
-        return;
-      }
-      if(!response.ok||data.ok!==true||!data.audit)throw new Error(data.detail||("HTTP "+response.status));
-      const report=data.audit;
-      auditStatus.textContent=report.summary.status+" · "+report.summary.passed+"/"+report.summary.total+" passed";
-      auditReport.textContent=[
-        "TAMANNA AI — ETHICAL SECURITY AUDIT",
-        "Mode: "+report.mode,
-        "Summary: "+JSON.stringify(report.summary),
-        "",
-        ...report.checks.map(item=>item.status+" | "+item.name+" | "+item.detail),
-        "",
-        "LIMITATIONS",
-        ...report.limitations.map(item=>"- "+item)
-      ].join("\n");
-    }catch(error){
-      auditStatus.textContent="Audit unavailable";
-      auditReport.textContent="নিরাপত্তা audit চালানো যায়নি: "+(error.message||"network error");
-    }finally{
-      auditButton.disabled=false;
-    }
-  });
-}
-
-const antivirusForm=$("antivirusForm"),antivirusFile=$("antivirusFile"),antivirusButton=$("antivirusScanButton"),antivirusStatus=$("antivirusScanStatus"),antivirusReport=$("antivirusScanReport");
-if(antivirusForm&&antivirusFile&&antivirusButton&&antivirusStatus&&antivirusReport){
-  antivirusForm.addEventListener("submit",async event=>{
-    event.preventDefault();
-    const file=antivirusFile.files&&antivirusFile.files[0];
-    if(!file){antivirusStatus.textContent="Choose a file first";return;}
-    if(file.size>10*1024*1024){antivirusStatus.textContent="File exceeds 10 MiB limit";antivirusReport.textContent="এই endpoint সর্বোচ্চ 10 MiB ফাইল scan করে।";return;}
-    antivirusButton.disabled=true;
-    antivirusStatus.textContent="Uploading to temporary scanner…";
-    antivirusReport.textContent="ফাইলটি ClamAV দিয়ে পরীক্ষা করা হচ্ছে।";
-    try{
-      const form=new FormData();
-      form.append("file",file,file.name);
-      const response=await fetch("/tamanna-ai/security/antivirus/scan-upload",{
-        method:"POST",credentials:"same-origin",headers:{Accept:"application/json"},body:form
-      });
-      const data=await response.json().catch(()=>({}));
-      if(response.status===401||response.status===403){
-        antivirusStatus.textContent="Admin access required";
-        antivirusReport.textContent=data.detail||"Administrator permission was not verified.";
-        return;
-      }
-      if(response.status===503){
-        const detail=data.detail||{};
-        antivirusStatus.textContent="Scan not verified";
-        antivirusReport.textContent=typeof detail==="string"?detail:JSON.stringify(detail,null,2);
-        return;
-      }
-      if(response.status===413){
-        antivirusStatus.textContent="File too large";
-        antivirusReport.textContent=data.detail||"Maximum upload size is 10 MiB.";
-        return;
-      }
-      if(!response.ok||!data.scan)throw new Error(data.detail||("HTTP "+response.status));
-      const scan=data.scan;
-      antivirusStatus.textContent=scan.status==="clean"?"Clean · ClamAV scan completed":scan.status==="infected"?"Malware detected":"Scan status: "+scan.status;
-      antivirusReport.textContent=[
-        "TAMANNA AI ANTIVIRUS",
-        "File: "+(data.filename||file.name),
-        "Status: "+scan.status,
-        "Message: "+scan.message,
-        "Stored: "+String(data.stored===true),
-        "Executed: "+String(data.executed===true),
-        "",
-        "A clean result is not a guarantee that a file is safe."
-      ].join("\n");
-    }catch(error){
-      antivirusStatus.textContent="Scanner unavailable";
-      antivirusReport.textContent="Antivirus scan চালানো যায়নি: "+(error.message||"network error");
-    }finally{
-      antivirusButton.disabled=false;
-    }
-  });
-}
-
-connect();
+const $=id=>document.getElementById(id),KEY="tamanna.admin.local.v1";
+const defaults={theme:"dark",accent:"violet",language:"bn",model:"",historyLimit:"60",matchThreshold:"2",saveLocalHistory:true,collectLocalDiagnostics:true};
+const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))??fallback}catch(_){return fallback}};
+const write=(key,value)=>localStorage.setItem(key,JSON.stringify(value));
+let settings={...defaults,...read(KEY,{})},logs=read(KEY+".logs",[]),issues=read(KEY+".issues",[]);
+const stamp=()=>new Date().toISOString();
+function log(level,message){if(!settings.collectLocalDiagnostics&&level==="error")return;logs.unshift({at:stamp(),level,message:String(message).slice(0,1200)});logs=logs.slice(0,150);try{write(KEY+".logs",logs)}catch(_){}renderLogs()}
+function values(form){return Object.fromEntries(new FormData(form).entries())}
+function populate(){const form=$("settingsForm");Object.entries(settings).forEach(([key,value])=>{const el=form.elements.namedItem(key);if(el){if(el.type==="checkbox")el.checked=Boolean(value);else el.value=String(value)}});$("settingCount").textContent=Object.keys(settings).length}
+function renderIssues(){const root=$("issueList");root.replaceChildren();$("issueCount").textContent=issues.length;if(!issues.length){root.textContent="এখনো কোনো issue report নেই।";return}issues.forEach(item=>{const card=document.createElement("article");card.className="issue-card";const title=document.createElement("strong");title.textContent=(item.severity||"medium").toUpperCase()+" · "+new Date(item.at).toLocaleString();const body=document.createElement("p");body.textContent="প্রশ্ন: "+item.prompt+"\nউত্তর/সমস্যা: "+item.answer+(item.expected?"\nপ্রত্যাশিত: "+item.expected:"");const remove=document.createElement("button");remove.type="button";remove.className="secondary-button";remove.textContent="Remove report";remove.addEventListener("click",()=>{issues=issues.filter(x=>x.id!==item.id);write(KEY+".issues",issues);renderIssues();log("info","Issue report removed")});card.append(title,body,remove);root.append(card)})}
+function renderLogs(){$("logOutput").textContent=logs.length?logs.map(x=>x.at+" ["+x.level+"] "+x.message).join("\n"):"কোনো log নেই।"}
+function refresh(){$("overviewMode").textContent="Local";$("settingCount").textContent=Object.keys(settings).length;$("issueCount").textContent=issues.length;$("knowledgeCount").textContent="Loading";$("overviewUpdated").textContent="Updated "+new Date().toLocaleString();fetch(new URL("../assets/tamanna-knowledge.json",document.baseURI),{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("HTTP "+r.status);return r.json()}).then(data=>{$("knowledgeCount").textContent=Array.isArray(data.entries)?data.entries.length+" entries":"Invalid format"}).catch(()=>{$("knowledgeCount").textContent="Unavailable";log("warning","Static knowledge JSON could not be loaded")})}
+$("settingsForm").addEventListener("submit",event=>{event.preventDefault();const form=event.currentTarget,v=values(form);settings={...defaults,...v,saveLocalHistory:form.elements.saveLocalHistory.checked,collectLocalDiagnostics:form.elements.collectLocalDiagnostics.checked};try{write(KEY,settings);$("settingsStatus").textContent="এই browser-এ settings সংরক্ষিত হয়েছে।";$("savedState").textContent="All changes saved";populate();log("info","Admin preferences saved")}catch(error){$("settingsStatus").textContent="Save failed: "+error.message;log("error","Settings save failed: "+error.message)}});
+$("settingsForm").addEventListener("reset",()=>setTimeout(populate,0));
+$("issueForm").addEventListener("submit",event=>{event.preventDefault();const v=values(event.currentTarget),item={id:globalThis.crypto?.randomUUID?.()||String(Date.now()),at:stamp(),prompt:v.prompt,answer:v.answer,expected:v.expected||"",severity:v.severity};issues.unshift(item);issues=issues.slice(0,100);write(KEY+".issues",issues);event.currentTarget.reset();$("issueStatus").textContent="Issue report এই browser-এ সংরক্ষিত হয়েছে।";renderIssues();log("info","User recorded an AI answer issue ("+item.severity+")")});
+$("refreshOverview").addEventListener("click",refresh);$("refreshLogs").addEventListener("click",renderLogs);
+$("clearLogs").addEventListener("click",()=>{if(!confirm("এই browser-এর local logs মুছবেন?"))return;logs=[];write(KEY+".logs",logs);renderLogs()});
+$("exportData").addEventListener("click",()=>{const payload={schema:"tamanna-admin-local-v1",exported_at:stamp(),settings,logs,issues},url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json"})),a=document.createElement("a");a.href=url;a.download="tamanna-admin-backup.json";a.click();URL.revokeObjectURL(url);$("backupStatus").textContent="Backup export তৈরি হয়েছে।"});
+$("importData").addEventListener("change",async event=>{const file=event.target.files?.[0];if(!file)return;if(file.size>2*1024*1024){$("backupStatus").textContent="ফাইল 2 MiB-এর চেয়ে বড়।";return}try{const p=JSON.parse(await file.text());if(p.schema!=="tamanna-admin-local-v1"||!p.settings||!Array.isArray(p.issues)||!Array.isArray(p.logs))throw Error("Unsupported backup format");settings={...defaults,...p.settings};issues=p.issues.slice(0,100);logs=p.logs.slice(0,150);write(KEY,settings);write(KEY+".issues",issues);write(KEY+".logs",logs);populate();renderIssues();renderLogs();$("backupStatus").textContent="Backup import হয়েছে।";log("info","Admin backup imported")}catch(error){$("backupStatus").textContent="Import failed: "+error.message}finally{event.target.value=""}});
+$("resetAdminData").addEventListener("click",()=>{if(!confirm("Admin settings, local issue reports এবং logs reset করবেন?"))return;localStorage.removeItem(KEY);localStorage.removeItem(KEY+".issues");localStorage.removeItem(KEY+".logs");settings={...defaults};issues=[];logs=[];populate();renderIssues();renderLogs();$("backupStatus").textContent="এই browser-এর admin local data reset হয়েছে।"});
+window.addEventListener("error",event=>log("error",(event.message||"JavaScript error")+" at "+(event.filename||"unknown")+":"+event.lineno));
+window.addEventListener("unhandledrejection",event=>log("error","Unhandled promise rejection: "+String(event.reason?.message||event.reason||"unknown")));
+document.querySelectorAll(".local-nav a").forEach(link=>link.addEventListener("click",()=>document.querySelectorAll(".local-nav a").forEach(x=>x.classList.toggle("active",x===link))));
+populate();renderIssues();renderLogs();refresh();log("info","Local admin control center opened");
 })();
