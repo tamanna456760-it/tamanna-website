@@ -9,3 +9,12 @@ The Bengali Chat Panel now runs in **API-free local knowledge mode**. Questions 
 **GitHub Pages is static hosting.** It can serve the UI and local knowledge file, but cannot run a Python server or Ollama. A full generative model without an API would require downloading and running a compatible browser-side model (WebGPU/WebAssembly), which is a separate, larger feature. The Admin panel remains Preview Mode without a trusted backend.
 
 **Owner:** HM INSAN ALI
+
+
+## Separate administration panels
+
+- **Tamanna Chat:** [Open chat](https://tamanna456760-it.github.io/tamanna-website/)
+- **Tamanna AI Admin:** [Open AI control panel](https://tamanna456760-it.github.io/tamanna-website/admin/)
+- **Tamanna Server Admin:** `https://YOUR-CONFIGURED-SERVER-HOST/admin/` (available when the Flask server is deployed with this repository's admin files)
+
+The AI Admin page currently provides browser-local preferences, issue reports and diagnostics. It is not a substitute for authenticated server-side account, model or permission controls. Live administration requires protected backend endpoints.
