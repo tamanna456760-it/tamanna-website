@@ -19,8 +19,12 @@ class WebsiteTests(unittest.TestCase):
   self.assertNotIn("Open User Chat",self.admin)
   self.assertNotIn('href="../"',self.admin)
  def test_admin_panel_is_published(self):
-  self.assertIn("Admin Dashboard",self.admin);self.assertIn("../js/admin.js",self.admin);self.assertIn("../css/admin.css",self.admin);self.assertIn("runEthicalAudit",self.admin);self.assertIn("antivirusForm",self.admin);self.assertNotIn("Open User Chat",self.admin)
-  self.assertIn("PREVIEW MODE",(ROOT/"js/admin.js").read_text());self.assertIn("/api/admin/security/ethical-audit",(ROOT/"js/admin.js").read_text());self.assertIn("/tamanna-ai/security/antivirus/scan-upload",(ROOT/"js/admin.js").read_text());self.assertNotIn('location.href="/"',(ROOT/"js/admin.js").read_text())
+  self.assertIn("Admin Control Center",self.admin);self.assertIn("../js/admin.js",self.admin);self.assertIn("../css/admin.css",self.admin)
+  self.assertIn("TRANSPARENT CAPABILITY REGISTER",self.admin);self.assertIn("Browser-local mode",self.admin)
+  self.assertNotIn("Open User Chat",self.admin)
+  js=(ROOT/"js/admin.js").read_text()
+  self.assertIn("tamanna.admin.local.v1",js);self.assertIn("tamanna-admin-local-v1",js)
+  self.assertNotIn("location.href=\"/\"",js)
  def test_assets_exist(self):
   for x in self.parser.assets:
    if x.startswith(("http:","https:","#")):continue
@@ -56,10 +60,17 @@ class WebsiteTests(unittest.TestCase):
   health=(ROOT/"js/model-health.js").read_text()
   for endpoint in ("/tamanna-ai/system/metrics","/tamanna-ai/model/resources","/tamanna-ai/model/recovery"):
    self.assertNotIn(endpoint,health)
- def test_admin_logout_only_reports_success_after_server_confirms(self):
-  js=(ROOT/"js/admin.js").read_text();self.assertIn("data.ok!==true",js);self.assertIn("Sign out failed. Your session may still be active.",js);self.assertNotIn("finally{logout.hidden=true",js)
+ def test_admin_logout_is_not_claimed_in_browser_local_mode(self):
+  js=(ROOT/"js/admin.js").read_text()
+  self.assertNotIn("Sign out successful",js)
+  self.assertIn("Browser-local mode",self.admin)
  def test_admin_preview_safe(self):
-  js=(ROOT/"js/admin.js").read_text();self.assertIn("/api/admin/overview",js);self.assertIn("setPreview",js);self.assertIn("Access denied",js)
+  js=(ROOT/"js/admin.js").read_text()
+  self.assertIn("tamanna.admin.local.v1",js)
+  self.assertNotIn("/api/admin/overview",js)
+  self.assertNotIn("setPreview",js)
+  self.assertIn("Browser-local mode",self.admin)
+  self.assertIn("এই panel শুধু এই browser-এর local settings ও logs পরিচালনা করে",self.admin)
  def test_pwa_shell(self):
   sw=(ROOT/"sw.js").read_text();self.assertIn("tamanna-ai-shell-v9",sw);self.assertIn("pwa.js?v=20261113_pwa1",self.html);self.assertIn("./admin/",sw);self.assertNotIn("./app.js",sw)
 if __name__=="__main__":unittest.main(verbosity=2)
